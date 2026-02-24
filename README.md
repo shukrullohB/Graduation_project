@@ -1,295 +1,265 @@
-# Graduation Project — Intelligent Short Answer Grading Platform (ASAG)
+# 🎓 Intelligent Short Answer Grading Platform (ASAG)
 
-This project is an intelligent web-based platform for **automated assessment, feedback generation, and learning analytics** of short-answer student responses using **NLP** and a **teacher-guided AI (human-in-the-loop)** workflow.
+An intelligent web-based platform for **automated short-answer assessment, feedback generation, and learning analytics** using NLP and a teacher-guided AI workflow (human-in-the-loop).
 
-The system helps teachers reduce grading time, improve scoring consistency, and provide faster and more useful feedback to students.
-
----
-
-## 👥 Team Members & Responsibilities
-
-- **Shukrullo Baxtiyorov (220411)** — Dataset preparation, NLP scoring model, training experiments, evaluation  
-- **Sanjar Raximjanov (220304)** — Web platform backend, database, teacher review workflow, integration  
-- **Akmaljon Polatjonov (220484)** — Feedback generation, learning analytics dashboards, usability testing & reporting  
+This project is developed as part of the Graduation Project module.
 
 ---
 
-## 🎯 Main Features (Planned)
+# 👥 Team
 
-### ✅ Automated Short Answer Grading (NLP)
-- AI predicts rubric-based scores (0–5)
-- Supports baseline models (TF-IDF / embeddings) and transformer-based models
-
-### ✅ Feedback Generation
-- Generates short and clear feedback for students
-- Teachers can edit and improve feedback
-
-### ✅ Human-in-the-loop Teacher Review
-- Teacher reviews AI score + feedback
-- Teacher can approve or correct results
-- Corrections are stored for future model improvement
-
-### ✅ Learning Analytics Dashboard
-- Class performance summary
-- Score distribution
-- Common misconceptions and mistakes
-- Student progress tracking
+- **Shukrullo Baxtiyorov (220411)** — NLP model, dataset preparation, evaluation
+- **Sanjar Raximjanov (220304)** — Backend, database, API, system integration
+- **Akmaljon Polatjonov (220484)** — Frontend, analytics dashboards, usability testing
 
 ---
 
-## 🧱 Project Structure
+# 🎯 Project Goals
+
+- Automatically score short-answer responses (rubric-based 0–5)
+- Generate clear and useful feedback for students
+- Allow teachers to review and correct AI outputs
+- Store corrections to improve the model
+- Provide learning analytics dashboards
+- Reduce grading time and improve consistency
+
+---
+
+# 🏗️ Project Architecture
+
+The system consists of 3 main services:
+
+1. **Backend API (FastAPI)**
+2. **NLP Service (AI scoring + feedback)**
+3. **Frontend (React)**
+4. **PostgreSQL Database**
+5. **Dockerized infrastructure**
+
+---
+
+# 📁 Project Structure
+
+```
 Graduation_project/
 │
-├── README.md
-├── .gitignore
+├── backend/        # FastAPI backend (API, DB, auth, review workflow)
+├── nlp_service/    # NLP scoring + feedback service
+├── frontend/       # React frontend (teacher + student UI)
+├── docs/           # Documentation and research materials
+├── infra/          # Deployment configs (nginx, scripts)
 ├── docker-compose.yml
 ├── .env.example
-│
-├── docs/
-│   ├── TEAM_RULES.md
-│   ├── API_SPEC.md
-│   ├── DB_SCHEMA.md
-│   ├── MODEL_EVALUATION.md
-│   ├── DEPLOYMENT.md
-│   └── REFERENCES.md
-│
-├── backend/
-│   ├── README.md
-│   ├── requirements.txt
-│   ├── Dockerfile
-│   ├── .env.example
-│   │
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── core/
-│   │   │   ├── config.py
-│   │   │   ├── security.py
-│   │   │   └── database.py
-│   │   │
-│   │   ├── models/              # SQLAlchemy models
-│   │   │   ├── user.py
-│   │   │   ├── question.py
-│   │   │   ├── answer.py
-│   │   │   ├── ai_result.py
-│   │   │   └── review.py
-│   │   │
-│   │   ├── schemas/             # Pydantic schemas
-│   │   │   ├── auth.py
-│   │   │   ├── user.py
-│   │   │   ├── question.py
-│   │   │   ├── answer.py
-│   │   │   ├── review.py
-│   │   │   └── analytics.py
-│   │   │
-│   │   ├── api/
-│   │   │   ├── routes/
-│   │   │   │   ├── auth.py
-│   │   │   │   ├── users.py
-│   │   │   │   ├── questions.py
-│   │   │   │   ├── answers.py
-│   │   │   │   ├── reviews.py
-│   │   │   │   ├── analytics.py
-│   │   │   │   └── health.py
-│   │   │   └── router.py
-│   │   │
-│   │   ├── services/
-│   │   │   ├── scoring_client.py     # calls nlp_service
-│   │   │   ├── analytics_service.py
-│   │   │   └── review_service.py
-│   │   │
-│   │   ├── crud/
-│   │   │   ├── user_crud.py
-│   │   │   ├── question_crud.py
-│   │   │   ├── answer_crud.py
-│   │   │   ├── review_crud.py
-│   │   │   └── analytics_crud.py
-│   │   │
-│   │   └── utils/
-│   │       ├── validators.py
-│   │       └── helpers.py
-│   │
-│   └── tests/
-│       ├── test_auth.py
-│       └── test_questions.py
-│
-├── nlp_service/
-│   ├── README.md
-│   ├── requirements.txt
-│   ├── Dockerfile
-│   ├── .env.example
-│   │
-│   ├── app/
-│   │   ├── main.py                 # FastAPI
-│   │   ├── config.py
-│   │   │
-│   │   ├── scoring/
-│   │   │   ├── baseline_tfidf.py
-│   │   │   ├── sbert_scoring.py
-│   │   │   ├── transformer_scoring.py
-│   │   │   └── rubric_utils.py
-│   │   │
-│   │   ├── feedback/
-│   │   │   ├── rule_based.py
-│   │   │   ├── template_feedback.py
-│   │   │   └── feedback_utils.py
-│   │   │
-│   │   ├── evaluation/
-│   │   │   ├── metrics.py          # MAE, kappa, correlation
-│   │   │   ├── evaluate_model.py
-│   │   │   └── ablation.py
-│   │   │
-│   │   └── data/
-│   │       ├── sample_dataset.csv
-│   │       └── dataset_schema.json
-│   │
-│   └── tests/
-│       ├── test_scoring.py
-│       └── test_feedback.py
-│
-├── frontend/
-│   ├── README.md
-│   ├── package.json
-│   ├── vite.config.js
-│   ├── Dockerfile
-│   │
-│   ├── src/
-│   │   ├── main.jsx
-│   │   ├── App.jsx
-│   │   │
-│   │   ├── api/
-│   │   │   ├── axiosClient.js
-│   │   │   ├── authApi.js
-│   │   │   ├── questionsApi.js
-│   │   │   ├── answersApi.js
-│   │   │   ├── reviewsApi.js
-│   │   │   └── analyticsApi.js
-│   │   │
-│   │   ├── pages/
-│   │   │   ├── LoginPage.jsx
-│   │   │   ├── TeacherDashboard.jsx
-│   │   │   ├── StudentDashboard.jsx
-│   │   │   ├── QuestionPage.jsx
-│   │   │   ├── AnswerSubmitPage.jsx
-│   │   │   ├── TeacherReviewPage.jsx
-│   │   │   └── AnalyticsDashboard.jsx
-│   │   │
-│   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── ProtectedRoute.jsx
-│   │   │   ├── ScoreBadge.jsx
-│   │   │   ├── FeedbackBox.jsx
-│   │   │   ├── QuestionCard.jsx
-│   │   │   └── Charts/
-│   │   │       ├── ScoreDistributionChart.jsx
-│   │   │       ├── AverageScoreChart.jsx
-│   │   │       └── MistakesChart.jsx
-│   │   │
-│   │   ├── context/
-│   │   │   └── AuthContext.jsx
-│   │   │
-│   │   ├── hooks/
-│   │   │   └── useAuth.js
-│   │   │
-│   │   └── styles/
-│   │       └── global.css
-│   │
-│   └── public/
-│       └── favicon.svg
-│
-└── infra/
-    ├── nginx/
-    │   ├── nginx.conf
-    │   └── default.conf
-    │
-    └── scripts/
-        ├── deploy.sh
-        └── backup_db.sh
+└── README.md
+```
 
 ---
 
-## ⚙️ Tech Stack (Recommended)
+# 🔧 Backend (FastAPI)
+
+Located in `backend/`
+
+### Responsibilities:
+- Authentication (JWT)
+- User management (Teacher / Student)
+- Question and answer management
+- Teacher review workflow
+- Analytics endpoints
+- Communication with NLP service
+
+### Main Components:
+
+- `models/` → SQLAlchemy models
+- `schemas/` → Pydantic validation schemas
+- `api/routes/` → API endpoints
+- `services/` → Business logic
+- `crud/` → Database operations
+- `core/` → Config, security, DB connection
+
+---
+
+# 🧠 NLP Service
+
+Located in `nlp_service/`
+
+### Responsibilities:
+- Automatic scoring (0–5 rubric-based)
+- Feedback generation
+- Model evaluation
+- Ablation studies
+
+### Modules:
+
+- `scoring/`
+  - TF-IDF baseline
+  - SBERT scoring
+  - Transformer-based scoring
+
+- `feedback/`
+  - Rule-based feedback
+  - Template feedback
+
+- `evaluation/`
+  - MAE
+  - Cohen’s Kappa
+  - Correlation
+  - Ablation testing
+
+- `data/`
+  - Dataset schema
+  - Sample dataset
+
+---
+
+# 💻 Frontend (React + Vite)
+
+Located in `frontend/`
+
+### Pages:
+
+- LoginPage
+- TeacherDashboard
+- StudentDashboard
+- QuestionPage
+- AnswerSubmitPage
+- TeacherReviewPage
+- AnalyticsDashboard
+
+### Components:
+
+- Navbar
+- ProtectedRoute
+- ScoreBadge
+- FeedbackBox
+- Charts (ScoreDistribution, AverageScore, Mistakes)
+
+---
+
+# 🔄 System Workflow
+
+```
+Student Answer
+      ↓
+Backend
+      ↓
+NLP Service (score + feedback)
+      ↓
+Teacher Review (approve or correct)
+      ↓
+Final Grade Stored
+      ↓
+Analytics Dashboard
+```
+
+---
+
+# 📊 Evaluation Metrics
+
+- Mean Absolute Error (MAE)
+- Correlation with teacher scores
+- Cohen’s Kappa / ICC
+- Grading time comparison
+- Ablation study results
+
+---
+
+# 🛠️ Tech Stack
 
 ### Backend
-- Python + FastAPI
+- Python
+- FastAPI
+- SQLAlchemy
 - PostgreSQL
-- JWT Authentication
+
+### AI / NLP
+- Hugging Face Transformers
+- SBERT
+- TF-IDF baseline
 
 ### Frontend
-- React + Vite
-- UI library (MUI or TailwindCSS)
+- React
+- Vite
+- Axios
 
-### NLP / AI
-- Hugging Face Transformers
-- SBERT / embeddings
-- Baselines: TF-IDF similarity
-
-### Deployment
-- Docker + Docker Compose
-- Nginx + HTTPS (Let’s Encrypt)
+### DevOps
+- Docker
+- Docker Compose
+- Nginx
 - Ubuntu VPS
 
 ---
 
-## 🚀 How We Work (GitHub Rules)
+# 🚀 How to Run (Development)
 
-To keep the project stable and organized:
+## 1️⃣ Clone repository
 
-✅ **Main branch is protected**  
-✅ All changes must be made through a **Pull Request (PR)**  
-✅ Each task must be developed in a separate branch:
-
-Examples:
-- `feature/backend-auth`
-- `feature/frontend-login`
-- `feature/nlp-scoring`
-- `fix/api-bug`
+```bash
+git clone <repo_url>
+cd Graduation_project
+```
 
 ---
 
-## 📌 Development Workflow
+## 2️⃣ Run with Docker
 
-1. Pick an Issue (task)
-2. Create a new branch
-3. Implement the feature
-4. Push the branch
-5. Open a Pull Request to `main`
-6. Team Lead reviews and merges
+```bash
+docker-compose up --build
+```
 
 ---
 
-## 🏁 Project Timeline (Feb – May 2026)
+## 3️⃣ Services
 
-- **February:** Dataset collection and preparation  
-- **March:** NLP model development and training  
-- **April:** Web platform implementation and integration  
-- **Early May:** Final testing, evaluation, and reporting  
-
----
-
-## 📊 Evaluation Metrics (Planned)
-
-- Mean Absolute Error (MAE)
-- Correlation with teacher scores
-- Agreement measures (Cohen’s kappa / ICC)
-- Grading time comparison (manual vs AI-assisted)
+- Backend → http://localhost:8000
+- NLP Service → http://localhost:8001
+- Frontend → http://localhost:5173
 
 ---
 
-## 🔒 Ethics & Data Management
+# 🔐 Git Workflow
 
-- Student answers will be anonymized
-- Teacher consent will be obtained
-- Data will be stored securely and used only for research purposes
-- Teacher corrections will be stored as high-quality annotations for model improvement
+We use a protected branching strategy:
+
+- `main` → stable version
+- `dev` → development integration
+- `feature/*` → individual features
+
+Workflow:
+
+```
+feature → dev → main
+```
+
+All changes must be made via Pull Request.
 
 ---
 
-## 📌 Status
+# 📚 Research Alignment
 
-🟡 Project started — initial structure and setup phase.
+This project integrates:
+
+- Automated Short Answer Grading (ASAG)
+- Human-in-the-loop AI
+- Feedback generation
+- Learning analytics
+- Teacher trust and usability evaluation
 
 ---
 
-## 📄 License
+# 🔒 Ethics & Data Management
 
-This project is developed for academic purposes as part of the Graduation Project module.
+- Student data anonymized
+- Teacher consent required
+- Data stored securely
+- Used strictly for academic purposes
+
+---
+
+# 📌 Current Status
+
+🟡 In development phase — architecture and core services initialized.
+
+---
+
+# 📄 License
+
+Academic project — for research and educational purposes only.
