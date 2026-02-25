@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+
+# Environment files
+.env
+backend/.env
+nlp_service/.env
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
