@@ -2,6 +2,8 @@ from fastapi import FastAPI
 
 from api.router import api_router
 from app.core.config import get_settings
+from app.core.database import Base, engine
+from models import Answer, Question, User
 
 settings = get_settings()
 
@@ -12,6 +14,12 @@ app = FastAPI(
 )
 
 app.include_router(api_router, prefix=settings.api_v1_prefix)
+
+
+@app.on_event("startup")
+def on_startup() -> None:
+	_ = (User, Question, Answer)
+	Base.metadata.create_all(bind=engine)
 
 
 @app.get("/")

@@ -1,37 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
+from api.deps import get_current_user
 from app.core.database import get_db
-from app.core.security import create_access_token, decode_access_token
+from app.core.security import create_access_token
 from crud.user_crud import authenticate_user, create_user, get_user_by_email
 from models.user import User
 from schemas.auth import LoginRequest, TokenResponse
 from schemas.user import UserCreate, UserPublic
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
-
-
-def get_current_user(
-	token: str = Depends(oauth2_scheme),
-	db: Session = Depends(get_db),
-) -> User:
-	payload = decode_access_token(token)
-	if not payload or "sub" not in payload:
-		raise HTTPException(
-			status_code=status.HTTP_401_UNAUTHORIZED,
-			detail="Invalid authentication token",
-		)
-
-	email = str(payload["sub"]).lower().strip()
-	user = get_user_by_email(db, email)
-	if not user:
-		raise HTTPException(
-			status_code=status.HTTP_401_UNAUTHORIZED,
-			detail="User not found",
-		)
-	return user
 
 
 @router.post("/register", response_model=UserPublic, status_code=status.HTTP_201_CREATED)
