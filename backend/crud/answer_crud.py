@@ -13,8 +13,8 @@ def create_answer(db: Session, payload: AnswerCreate, student_id: int) -> Answer
 		status=AnswerStatus.submitted,
 	)
 	db.add(answer)
-	db.commit()
-	db.refresh(answer)
+	# Keep transaction control in route/service layer.
+	db.flush()
 	return answer
 
 

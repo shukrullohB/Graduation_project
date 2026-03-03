@@ -8,8 +8,10 @@ class Settings(BaseSettings):
 	api_v1_prefix: str = "/api/v1"
 	environment: str = "development"
 	debug: bool = True
+	auto_create_tables: bool = False
 
 	database_url: str = "postgresql+psycopg2://postgres:postgres@localhost:5432/asag_db"
+	backend_cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
 
 	jwt_secret_key: str = "change_this_in_production"
 	jwt_algorithm: str = "HS256"

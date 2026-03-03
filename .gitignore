@@ -10,6 +10,7 @@ __pycache__/
 .env
 backend/.env
 nlp_service/.env
+*.env.local
 
 # IDE
 .vscode/
@@ -17,3 +18,6 @@ nlp_service/.env
 # OS
 .DS_Store
 Thumbs.db
+
+# Local extracted docs / temp files
+docs/proposal_extracted.txt

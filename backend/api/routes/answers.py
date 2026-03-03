@@ -11,11 +11,6 @@ from schemas.answer import AnswerCreate, AnswerPublic
 
 router = APIRouter(prefix="/answers", tags=["answers"])
 
-
-
-from fastapi import BackgroundTasks
-import asyncio
-
 @router.post("/submit", response_model=AnswerPublic, status_code=status.HTTP_201_CREATED)
 async def submit_answer(
 	payload: AnswerCreate,
@@ -26,11 +21,13 @@ async def submit_answer(
 	if not question or not question.is_active:
 		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
 
-	# Call NLP scoring service
+	# Try NLP scoring, but keep submission flow available if NLP is down.
+	ai_score: float | None = None
+	ai_feedback: str | None = None
 	try:
 		ai_score, ai_feedback = await score_answer(payload.question_id, payload.answer_text)
-	except ScoringError as e:
-		raise HTTPException(status_code=502, detail=str(e))
+	except ScoringError:
+		pass
 
 	# Save answer with AI results
 	answer = create_answer(db, payload, student.id)

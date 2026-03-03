@@ -1,21 +1,52 @@
+import base64
+import hashlib
+import hmac
+import os
 from datetime import UTC, datetime, timedelta
 
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 
 from app.core.config import get_settings
 
 
 settings = get_settings()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+PBKDF2_ITERATIONS = 310_000
+PBKDF2_ALGORITHM = "sha256"
+PBKDF2_KEY_BYTES = 32
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-	return pwd_context.verify(plain_password, hashed_password)
+	try:
+		scheme, iter_s, salt_b64, hash_b64 = hashed_password.split("$", 3)
+		if scheme != "pbkdf2_sha256":
+			return False
+		iterations = int(iter_s)
+		salt = base64.b64decode(salt_b64.encode("ascii"))
+		expected = base64.b64decode(hash_b64.encode("ascii"))
+		derived = hashlib.pbkdf2_hmac(
+			PBKDF2_ALGORITHM,
+			plain_password.encode("utf-8"),
+			salt,
+			iterations,
+			dklen=len(expected),
+		)
+		return hmac.compare_digest(derived, expected)
+	except Exception:
+		return False
 
 
 def get_password_hash(password: str) -> str:
-	return pwd_context.hash(password)
+	salt = os.urandom(16)
+	derived = hashlib.pbkdf2_hmac(
+		PBKDF2_ALGORITHM,
+		password.encode("utf-8"),
+		salt,
+		PBKDF2_ITERATIONS,
+		dklen=PBKDF2_KEY_BYTES,
+	)
+	salt_b64 = base64.b64encode(salt).decode("ascii")
+	hash_b64 = base64.b64encode(derived).decode("ascii")
+	return f"pbkdf2_sha256${PBKDF2_ITERATIONS}${salt_b64}${hash_b64}"
 
 
 def create_access_token(subject: str, expires_delta: timedelta | None = None) -> str:
