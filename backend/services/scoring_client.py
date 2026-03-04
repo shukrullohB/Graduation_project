@@ -1,7 +1,9 @@
 import httpx
 from app.core.config import get_settings
+import logging
 
 settings = get_settings()
+logger = logging.getLogger("app.scoring")
 
 class ScoringError(Exception):
 	pass
@@ -21,4 +23,5 @@ async def score_answer(question_id: int, answer_text: str) -> tuple[float, str]:
 			data = resp.json()
 			return float(data["score"]), str(data["feedback"])
 	except Exception as e:
+		logger.warning("nlp scoring failed for question_id=%s: %s", question_id, e)
 		raise ScoringError(f"NLP scoring failed: {e}")

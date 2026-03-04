@@ -8,6 +8,8 @@ class Settings(BaseSettings):
 	api_v1_prefix: str = "/api/v1"
 	environment: str = "development"
 	debug: bool = True
+	log_level: str = "INFO"
+	request_logging_enabled: bool = True
 	auto_create_tables: bool = False
 
 	database_url: str = "postgresql+psycopg2://postgres:postgres@localhost:5432/asag_db"
