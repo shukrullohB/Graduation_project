@@ -1,4 +1,4 @@
 .venv/
 __pycache__/
 *.pyc
-nlp_service/app/data/train.tsv
+nlp_service/app/data/train.tsvnlp_service/results/

@@ -1,3 +1,5 @@
-pandas
+fastapi
+uvicorn
 scikit-learn
-scipy
+pydantic
+sentence-transformers
