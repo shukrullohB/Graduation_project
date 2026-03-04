@@ -215,6 +215,25 @@ docker-compose up --build
 
 ---
 
+## 4️⃣ Backend Local Commands
+
+```bash
+cd backend
+../.venv/Scripts/python -m uvicorn app.main:app --reload --port 8010
+```
+
+```bash
+cd backend
+../.venv/Scripts/python -m alembic -c alembic.ini current
+../.venv/Scripts/python -m alembic -c alembic.ini upgrade head
+```
+
+```bash
+../.venv/Scripts/python -m pytest -q backend/tests
+```
+
+---
+
 # 🔐 Git Workflow
 
 We use a protected branching strategy:
