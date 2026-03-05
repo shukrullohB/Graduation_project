@@ -27,7 +27,7 @@ true_scores = []
 predicted_scores = []
 
 for _, row in df.iterrows():
-    score, similarity = scorer.score(row["reference_answer"], row["student_answer"])
+    score = scorer.score(row["student_answer"], row["reference_answer"])
     true_scores.append(row["teacher_score"])
     predicted_scores.append(score)
 

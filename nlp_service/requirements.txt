@@ -3,3 +3,9 @@ uvicorn
 scikit-learn
 pydantic
 sentence-transformers
+torch
+transformers
+datasets
+numpy
+pandas
+scipy

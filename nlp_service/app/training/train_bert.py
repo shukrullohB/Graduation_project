@@ -1,6 +1,5 @@
 from pathlib import Path
 import argparse
-import inspect
 
 import numpy as np
 import pandas as pd
@@ -19,7 +18,6 @@ def parse_args():
     parser.add_argument("--max_length", type=int, default=128)
     parser.add_argument("--debug_rows", type=int, default=0)
     parser.add_argument("--output_dir", type=str, default="results/bert_regressor")
-    parser.add_argument("--save_steps", type=int, default=200)
     parser.add_argument("--seed", type=int, default=42)
     return parser.parse_args()
 
@@ -29,26 +27,6 @@ def compute_metrics(eval_pred):
     preds = np.squeeze(predictions)
     mae = mean_absolute_error(labels, preds)
     return {"mae": mae}
-
-
-def find_latest_checkpoint(output_dir: Path):
-    if not output_dir.exists():
-        return None
-
-    checkpoints = []
-    for path in output_dir.iterdir():
-        if path.is_dir() and path.name.startswith("checkpoint-"):
-            try:
-                step = int(path.name.split("-")[-1])
-                checkpoints.append((step, path))
-            except ValueError:
-                continue
-
-    if not checkpoints:
-        return None
-
-    checkpoints.sort(key=lambda item: item[0])
-    return checkpoints[-1][1]
 
 
 def main():
@@ -100,43 +78,17 @@ def main():
         problem_type="regression",
     )
 
-    training_kwargs = {
-        "output_dir": args.output_dir,
-        "num_train_epochs": args.epochs,
-        "per_device_train_batch_size": args.batch_size,
-        "per_device_eval_batch_size": args.batch_size,
-        "dataloader_pin_memory": False,
-        "logging_steps": 50,
-        "save_total_limit": 2,
-        "seed": args.seed,
-    }
-
-    supported_params = inspect.signature(TrainingArguments.__init__).parameters
-
-    if "evaluation_strategy" in supported_params:
-        training_kwargs["evaluation_strategy"] = "epoch"
-    elif "eval_strategy" in supported_params:
-        training_kwargs["eval_strategy"] = "epoch"
-
-    if "save_strategy" in supported_params:
-        training_kwargs["save_strategy"] = "steps"
-
-    if "save_steps" in supported_params:
-        training_kwargs["save_steps"] = args.save_steps
-
-    if "load_best_model_at_end" in supported_params:
-        training_kwargs["load_best_model_at_end"] = True
-
-    if "metric_for_best_model" in supported_params:
-        training_kwargs["metric_for_best_model"] = "mae"
-
-    if "greater_is_better" in supported_params:
-        training_kwargs["greater_is_better"] = False
-
-    if "report_to" in supported_params:
-        training_kwargs["report_to"] = "none"
-
-    training_args = TrainingArguments(**training_kwargs)
+    training_args = TrainingArguments(
+        output_dir=args.output_dir,
+        num_train_epochs=args.epochs,
+        per_device_train_batch_size=args.batch_size,
+        per_device_eval_batch_size=args.batch_size,
+        dataloader_pin_memory=False,
+        logging_steps=50,
+        save_total_limit=2,
+        report_to="none",
+        seed=args.seed,
+    )
 
     trainer = Trainer(
         model=model,
@@ -146,15 +98,8 @@ def main():
         compute_metrics=compute_metrics,
     )
 
-    output_dir = Path(args.output_dir)
-    latest_checkpoint = find_latest_checkpoint(output_dir)
-
     print("Starting training...")
-    if latest_checkpoint is not None:
-        print("Resuming from checkpoint:", latest_checkpoint)
-        trainer.train(resume_from_checkpoint=str(latest_checkpoint))
-    else:
-        trainer.train()
+    trainer.train()
 
     print("Evaluating...")
     predictions = trainer.predict(test_dataset)
