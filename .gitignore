@@ -1,0 +1,30 @@
+<<<<<<< HEAD
+.venv/
+__pycache__/
+*.pyc
+nlp_service/app/data/train.tsvnlp_service/results/
+=======
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+
+# Environment files
+.env
+backend/.env
+nlp_service/.env
+*.env.local
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local extracted docs / temp files
+docs/proposal_extracted.txt
+>>>>>>> origin/feature/backend-foundation-220304
