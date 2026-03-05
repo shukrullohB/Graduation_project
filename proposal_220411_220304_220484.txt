@@ -1,0 +1,342 @@
+An Intelligent Web Platform for
+Automated Assessment, Feedback, and
+Learning Analytics of Short Answers
+Using NLP and Teacher-Guided AI
+
+Shukrullo Baxtiyorov - 220411
+Sanjar Raximjanov - 220304
+Akmaljon Polatjonov - 220484
+Computer Science
+CS4-22
+
+A Research Proposal Submitted in Partial Fulfilment of
+the Module
+
+Graduation Project and
+Internship
+
+Abstract
+Grading short-answer questions in education is time-consuming, often inconsistent, and strongly influenced
+by subjective teacher judgment. As a result, students receive feedback late and evaluation may become less
+fair. This project focuses on using Natural Language Processing (NLP) to automatically understand student
+answers, identify key concepts, and assign rubric-based scores. The system will be built using supervised
+NLP models and will follow a human-in-the-loop approach, where teachers can review, approve, and correct
+AI-generated scores and feedback before final grading. Teacher corrections will be stored as high-quality
+annotations and used to improve the NLP model over time. In addition to scoring, the system will generate
+short, clear, and useful feedback that helps students understand mistakes and improve learning outcomes. The
+platform will also provide learning analytics dashboards that summarize class performance, highlight common
+misconceptions, and support data-driven teaching decisions. The research will involve building a
+teacher-annotated dataset, training and evaluating the NLP models using reliability and error metrics, and
+testing the system with educators. The expected outcome is an intelligent web-based platform that reduces
+grading workload, improves feedback speed and consistency, and provides meaningful analytics for classroom
+improvement.
+Keywords — automated short-answer grading, NLP, supervised learning, human-in-the-loop, teacher-guided
+AI, formative feedback, learning analytics.
+
+1.​Introduction
+Assessment is important in education because it helps teachers understand what students have learned and
+where they need support. However, grading short-answer questions manually takes a lot of time, especially in
+large classes. It can also be inconsistent, because different teachers may give different scores to similar
+answers, and students often receive feedback too late.
+In recent years, Natural Language Processing (NLP) and machine learning have shown strong potential for
+improving short-answer grading. Modern NLP models, including transformer-based approaches, can better
+understand meaning in text and can be used to automatically score student answers. However, scoring alone
+is not enough, because students also need clear feedback to learn from mistakes. In addition, learning
+analytics can help teachers track progress, identify common misconceptions, and make better teaching
+decisions. This research aims to develop an intelligent web platform that combines automated assessment,
+feedback generation, and learning analytics for short answers. The platform will use NLP models together
+with a teacher-guided AI workflow, where teachers can review and correct AI outputs. This approach is
+expected to improve accuracy, support teacher trust, and continuously improve the system using real
+classroom data.
+
+2.​Problem Statement
+Short-answer questions are widely used in education because they help measure real understanding. However,
+grading short answers manually takes a lot of time, especially in large classes. As a result, students often
+receive feedback late, which reduces its value for learning. This problem mainly affects teachers, who face a
+heavy workload, and students, who need faster support to improve.
+Manual grading can also be inconsistent. Because short answers are open-ended, similar answers may receive
+different scores depending on the teacher. This reduces fairness and transparency. Although Automated Short
+
+Answer Grading (ASAG) systems exist, many of them focus only on predicting a score and do not provide
+clear feedback that helps students learn. In addition, many NLP-based methods require high-quality
+teacher-annotated data, which is difficult to collect in real classrooms. Finally, most solutions do not include
+learning analytics dashboards that help teachers track progress and identify common mistakes. Therefore, there
+is a need for a practical platform that combines NLP-based scoring, meaningful feedback, teacher review, and
+learning analytics in one system.
+
+3.​List of Contributions
+​
+
+This project is expected to make the following contributions:
+1.​ An NLP-based short-answer scoring model that assigns rubric-based scores by analyzing the meaning
+of student responses.​
+2.​ A feedback generation module that produces short, clear, and pedagogically useful feedback for
+students.​
+3.​ A teacher-guided (human-in-the-loop) workflow where teachers can review, approve, and correct
+AI-generated scores and feedback.​
+4.​ A teacher-annotated dataset of short answers, including scores and feedback, collected through real
+classroom use.​
+5.​ Learning analytics dashboards that summarize student performance, highlight common
+misconceptions, and support data-driven teaching decisions.​
+6.​ A functional web-based prototype that integrates scoring, feedback, teacher review, and analytics in
+one platform.
+
+4. Novelty
+The novelty of this project lies in combining several important components into one integrated and
+teacher-centered platform. While many existing Automated Short Answer Grading (ASAG) systems
+focus mainly on predicting scores, this work aims to provide a complete workflow that includes
+scoring, feedback, teacher review, and learning analytics in a single web-based system. In particular,
+the platform will use modern NLP models to understand the meaning of student answers and
+generate rubric-based scores, while also producing short and useful feedback. Another novel aspect
+is the teacher-guided (human-in-the-loop) design, where teachers can approve and correct
+AI-generated outputs before final grading. These corrections will be stored as high-quality
+annotations and used to continuously improve the NLP models over time. In addition, the system will
+
+provide learning analytics dashboards that help teachers identify common misconceptions and
+monitor student progress. This integrated approach is expected to improve accuracy, increase
+teacher trust, and make the system more practical for real classroom use.
+
+5.​ Research Questions, Hypotheses, and Objectives
+This section outlines the research questions that guide this study, along with the testable hypotheses and
+clearly defined objectives aligned with the identified problems.
+
+A.​Research Questions
+●​
+
+RQ1: How can an intelligent web platform be designed to automatically assess short answers
+and generate useful feedback using NLP?
+
+●​
+
+RQ2: How closely do the AI-generated scores and feedback match teacher evaluation in terms
+of accuracy, consistency, and fairness?
+
+●​
+
+RQ3: How can learning analytics dashboards be integrated into the platform to help
+teachers monitor student progress and identify common misconceptions?
+
+B.​Hypotheses
+●​
+
+H₀ (Null Hypothesis):
+The proposed AI-based platform will not significantly improve grading time, scoring consistency, or
+feedback usefulness compared to traditional manual assessment.
+
+●​
+
+H₁ (Alternative Hypothesis):
+The proposed AI-based platform will significantly reduce grading time and provide more consistent
+scoring and more useful feedback compared to traditional manual assessment.
+
+C.​Research Objectives
+General Objective
+To design, develop, and evaluate an intelligent web platform for automated assessment, feedback
+generation, and learning analytics of short answers using NLP and teacher-guided AI.
+
+Specific Objectives
+1.​ To develop an NLP-based model capable of automatically scoring short-answer responses.
+2.​ To design a teacher-guided workflow that allows teachers to review, correct, and
+validate AI-generated scores and feedback.
+3.​ To generate short, clear, and pedagogically meaningful feedback for student responses.
+4.​ To design learning analytics dashboards that summarize student performance and
+highlight common errors and misconceptions.
+
+6.​ Literature Review
+Many studies show that grading short answers manually takes a lot of time and can be inconsistent.
+Because of this, researchers have developed Automated Short Answer Grading (ASAG) systems using
+NLP and machine learning. Modern deep learning and transformer models can understand meaning better
+than old keyword-based methods, so they achieve better scoring results.
+However, scoring alone is not enough. Students also need feedback to learn from mistakes, but automatic
+feedback generation is still difficult. Another important area is learning analytics, which helps teachers see
+student progress, common errors, and performance trends.
+Recent research also shows that teachers trust AI systems more when they can review and correct the results.
+This is why teacher-guided AI (human-in-the-loop) is important. It improves accuracy and makes the
+system more acceptable for real classrooms.
+Overall, the literature supports automated grading, but highlights the need to combine scoring, feedback,
+analytics, and teacher involvement in one platform.
+
+7.​ Research Design and Methodology
+a.​ Research Design
+This study adopts a mixed-method research design, combining quantitative experimental evaluation of
+the AI-based grading model with qualitative teacher feedback to assess usability, trust, and adoption. The
+research follows a prototype development and validation approach, where an intelligent web platform is
+designed and implemented to support automated assessment, feedback generation, and learning analytics
+for short-answer responses. The system will be developed using NLP techniques and evaluated against
+teacher-generated baseline scores and feedback.
+
+b.​ Mapping Research Questions to Methods
+To ensure alignment between the research questions and the proposed methodology, each research question
+will be addressed using specific methods:
+RQ1 (Platform and AI model development): Addressed through system design and
+prototype implementation, including automated scoring and feedback generation using
+supervised NLP.
+RQ2 (AI vs. teacher evaluation): Addressed through experimental testing and
+statistical comparison between AI-generated scores and teacher scores using agreement
+and error metrics.
+RQ3 (Learning analytics integration): Addressed through the design and
+implementation of analytics dashboards, followed by evaluation of their usefulness for
+teachers.
+➔​ Student answers → NLP scoring → feedback → teacher review → store corrections → analytics
+
+c.​ Data Collection and Analysis
+The dataset will be collected through collaboration with teachers, who will provide real short-answer
+responses from students. Teachers will grade these answers using a clear scoring rubric and, where possible,
+provide short feedback aligned with learning objectives. All student responses will be anonymized before
+processing to ensure privacy and ethical compliance.
+For quantitative evaluation, the AI model will be trained using supervised learning and tested on unseen
+responses. The predicted scores will be compared with teacher scores using reliability and accuracy metrics
+such as Mean Absolute Error (MAE), correlation, and inter-rater agreement measures (e.g., Cohen’s kappa
+or ICC). In addition, grading speed will be measured to evaluate time savings compared to manual grading.
+For qualitative evaluation, teacher surveys or interviews will be conducted to assess usability, trust,
+transparency, and the perceived usefulness of AI-generated feedback and learning analytics dashboards.
+Qualitative responses will be analyzed using thematic analysis to identify key adoption factors and
+improvement needs.
+
+8. Data Availability for Experiments
+The experiments in this project will be conducted using a dataset of real short-answer responses collected
+through collaboration with teachers. The dataset will include student answers, teacher-assigned scores based on
+a clear scoring rubric, and where possible, short teacher feedback aligned with learning objectives. All student
+responses will be anonymized by removing personal identifiers to ensure privacy and ethical compliance. The
+expected dataset size is approximately 1,000–3,000 short-answer responses in the initial stage, and it may be
+expanded over time through teacher corrections during system use. The data will be stored in a structured
+format such as CSV or JSON, where each record includes the question, student answer, teacher score, and
+optional teacher feedback. If real classroom data is limited at the early stage, a small synthetic dataset may be
+created for initial testing of the platform workflow, but the main evaluation will be based on teacher-annotated
+answers. The dataset will be used only for research and evaluation purposes, and access will be restricted to the
+project team unless explicit permission is granted for future academic sharing.
+
+9. Experimental Setup (Initial Plan)
+The system will be evaluated using short-answer responses that were not used during training. The main goal is
+to check how close the AI scores are to teacher scores. The evaluation will use metrics such as Mean Absolute
+Error (MAE), correlation, and agreement measures (e.g., Cohen’s kappa or ICC). We will also measure grading
+time to estimate how much faster the platform is compared to manual grading. To make the results meaningful,
+the proposed transformer-based NLP model will be compared with simple baseline methods, such as TF-IDF
+similarity and sentence embedding similarity (e.g., SBERT). The experiments will be implemented in Python
+using Hugging Face Transformers and PyTorch or TensorFlow. If needed, GPU resources will be used to speed
+up model training.
+
+10. Ablation Study
+An ablation study will be used to understand which parts of the system are most important. We will test the
+model with different configurations and compare the results. For example, we will evaluate scoring
+performance with and without teacher correction data to measure the impact of the human-in-the-loop
+workflow. We will also compare a transformer-based model with simpler NLP baselines, such as TF-IDF or
+sentence embeddings. This will help identify which components contribute most to accuracy and reliability.
+
+11. Timeline, Task Distribution & Responsibilities
+To ensure clear responsibility in the group project, tasks will be distributed as follows:
+●​ Shukrullo Baxtiyorov (220411): Dataset preparation, NLP scoring model development, training
+experiments, and quantitative evaluation.​
+●​ Sanjar Raxmjonov (220304): Web platform development, backend and database implementation,
+teacher review workflow, and system integration.​
+●​ Akmaljon Polatjonov (220484): Feedback generation module, learning analytics dashboards, usability
+testing with educators, and evaluation reporting.
+All members will jointly contribute to writing, documentation, final testing, and presentation preparation.
+
+This research will be completed within the period from February to early May 2026. The work is divided
+into clear phases, covering dataset preparation, NLP model development, web platform implementation,
+learning analytics integration, and final evaluation.
+●​ February 2026: Dataset collection and preparation. This includes gathering short-answer responses,
+anonymizing student data, and performing teacher annotation using a scoring rubric. The dataset will
+be cleaned and organized for training and testing.
+●​ March 2026: NLP model development and training. During this phase, supervised learning will be
+used to train the automated scoring model and the feedback generation component. Initial
+experiments will be conducted to validate performance and adjust model settings.
+●​ April 2026: Web platform implementation and integration. The intelligent web platform will be
+developed with teacher and student roles, automated grading features, teacher-guided correction
+workflow, and learning analytics dashboards. System integration testing will also be performed.
+●​ Early May 2026: Final testing and evaluation. The platform will be tested on unseen short answers,
+and AI scores will be compared with teacher scores using reliability and accuracy metrics. Usability
+testing will be conducted with teachers to evaluate trust, ease of use, and the usefulness of analytics
+dashboards. Final results and documentation will be prepared for submission and defense.
+
+12.​Ethical Considerations and Data Management
+a.​ Research Ethics and Participant Protection
+This research involves the collection of short-answer responses graded by teachers and may include teacher
+participation in usability testing. Before any data collection begins, written informed consent will be
+obtained from participating teachers. Student responses used in the dataset will be treated as educational data
+and will be anonymized by removing all personal identifiers. Participation will be voluntary, and teachers
+will have the right to withdraw at any stage without any negative consequences.
+If required by university policy, ethical clearance will be requested from the appropriate academic or
+institutional review committee before collecting any classroom data.
+
+b.​ Responsible Data Management
+All collected data, including student responses, teacher scores, teacher feedback, and teacher corrections of
+AI outputs, will be securely stored in password-protected and access-controlled storage. Only the research
+team members will have access to the dataset. The dataset will be version-controlled to ensure transparency
+and prevent unauthorized modifications.
+Data will be used strictly for research purposes, model training, and evaluation. After the project is
+completed, the dataset will either be archived securely for academic use or deleted, depending on university
+requirements and participant consent.
+
+c.​ Ethical Use of AI Tools
+AI-assisted tools may be used only for language refinement, grammar checking, and clarity improvement
+during proposal writing. These tools will not be used to fabricate results, generate false data, or replace
+original research work. All outputs will be reviewed and edited manually to ensure academic integrity.
+
+Example ethical AI usage statement:
+“AI-assisted tools were used to improve grammar and clarity. All research ideas, methodology, and analysis
+remain the authors’ original work.”
+
+d.​ Academic Integrity Statement
+This research will follow the university’s academic integrity policies. All external academic sources will be
+cited properly. The project will avoid plagiarism, data fabrication, and unethical use of AI. Teacher and
+student data will be handled responsibly, with respect for privacy and confidentiality.
+
+13.​ Feasibility, Limitations, and Risk Management
+This research is feasible because modern NLP tools and web technologies are widely available. The
+platform can be developed using Python, transformer-based NLP libraries, and a standard web framework.
+The project will be built as a prototype and improved step by step.
+However, there are some limitations and risks. The main challenge is collecting enough high-quality
+teacher-annotated short answers for training and evaluation. To reduce this risk, the project will start
+with a smaller dataset and expand it gradually through teacher corrections.
+Another limitation is that AI may not always grade complex or unclear answers correctly. To manage this,
+the platform will use a teacher-guided AI approach, where teachers can review and correct AI outputs before
+final grading.
+Technical risks include limited GPU resources for training NLP models. This can be handled by using
+university resources, cloud services, or smaller models. Finally, teacher adoption may be difficult if the
+system is not trusted or easy to use, so the platform will focus on usability, transparency, and practical
+analytics dashboards.
+
+14.​ Expected Outcomes
+This research is expected to produce a working prototype of an intelligent web platform for
+automated assessment, feedback generation, and learning analytics of short answers. The platform
+will be able to automatically score student responses and generate short, helpful feedback.
+The system will also provide learning analytics dashboards for teachers, such as class performance
+summaries, progress tracking, and common mistake detection. In addition, the project will produce
+a teacher-annotated dataset of short answers, including scores and feedback, which can be used for
+model training and evaluation.
+The evaluation results are expected to show that the platform reduces grading time and improves consistency
+compared to fully manual grading. Teacher usability testing is also expected to provide insights about trust,
+ease of use, and real classroom adoption.
+
+15.​ References
+1.​ S. Burrows, I. Gurevych, and B. Stein, “The Eras and Trends of Automatic Short Answer Grading,” Int.
+J. Artif. Intell. Educ., vol. 25, pp. 60–117,
+
+2015, doi:10.1007/s40593-014-0026-8.
+https://link.springer.com/article/10.1007/s40593-014-0026-8
+2.​ A. Condor et al., “Exploring Automatic Short Answer Grading as a Tool to Assist Educators,” BMC
+Med.Educ., vol. 20, no. 1, 2020. https://pmc.ncbi.nlm.nih.gov/articles/PMC7334737
+3.​ P. Sree Lakshmi, M. Hussain, and D. Reddy, “Empowering Educators: Automated Short
+AnswerGrading with Learning Analytics,” SN Comput. Sci., 2024, doi:10.1007/s42979-024-02954-7.
+https://dl.acm.org/doi/abs/10.1007/s42979-024-02954-7
+4.​ S. Haller, A. Aldea, C. Seifert et al., “Survey on Automated Short Answer Grading with Deep Learning:
+from Word Embeddings to Transformers,” arXiv, 2025. https://arxiv.org/html/2407.12818v2
+5.​ B. T. M. Wong, K. C. Li, and M. Liu, “The Role of Learning Analytics in Evaluating
+Course Effectiveness,” Sustainability, vol. 17, no. 2, p. 559, 2025,
+doi:10.3390/su17020559. https://www.mdpi.com/2071-1050/17/2/559
+6.​ A. Kara, “Studies on Automated Short Answer Evaluation,” ERIC,
+2024. https://files.eric.ed.gov/fulltext/EJ1424258.pdf
+7.​ M. Tornqvist et al., “Explainable Framework for Automatic Short Answer Grading,” in Proc. of
+the Workshop on Building Educational Applications Using NLP, 2023.
+https://aclanthology.org/2023.bea-1.29.pdf
+8.​ F. Künnecke, A. Filighera, C. Leong, and T. Steuer, “Enhancing Multi-Domain Automatic Short
+Answer Grading through an Explainable Neuro-Symbolic Pipeline,” arXiv, 2024.
+https://arxiv.org/abs/2403.01811
+9.​ Y. Chu, H. Li, K. Yang, et al., “A LLM-Powered Automatic Grading Framework with
+Human-Level Guidelines Optimization,” arXiv, 2024. https://arxiv.org/abs/2410.02165
+10.​C. Zhao, M. Silva, and S. Poulsen, “Language Models are Few-Shot Graders,” arXiv,
+2025. https://arxiv.org/abs/2502.13337
+
+
