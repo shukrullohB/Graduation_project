@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { getPendingAnswers } from "../api/review.api";
-import ScoreBadge from "../components/ScoreBadge";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function TeacherDashboard() {
   const { data: pending, isLoading } = useQuery({
@@ -9,7 +9,7 @@ export default function TeacherDashboard() {
     queryFn: () => getPendingAnswers().then((r) => r.data),
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="dashboard">

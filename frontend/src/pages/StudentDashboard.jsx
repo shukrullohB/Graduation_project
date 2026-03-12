@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { getQuestions } from "../api/questions.api";
 import { getMyAnswers } from "../api/answers.api";
-import ScoreBadge from "../components/ScoreBadge";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function StudentDashboard() {
   const { data: questions, isLoading: qLoading } = useQuery({
@@ -17,7 +17,7 @@ export default function StudentDashboard() {
 
   const answeredIds = new Set(answers?.map((a) => a.question_id));
 
-  if (qLoading) return <p>Loading...</p>;
+  if (qLoading) return <LoadingSpinner />;
 
   return (
     <div className="dashboard">

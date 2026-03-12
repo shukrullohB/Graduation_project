@@ -21,12 +21,14 @@ export default function Navbar() {
         {user.role === "student" && (
           <>
             <Link to="/student">Dashboard</Link>
+            <Link to="/student/my-answers">My Answers</Link>
             <Link to="/student/analytics">Analytics</Link>
           </>
         )}
         {user.role === "teacher" && (
           <>
             <Link to="/teacher">Dashboard</Link>
+            <Link to="/teacher/create-question">+ Question</Link>
             <Link to="/teacher/analytics">Analytics</Link>
           </>
         )}

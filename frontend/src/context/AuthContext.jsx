@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { getMe } from "../api/auth.api";
+import { DEMO_MODE } from "../api/mockData";
 
 const AuthContext = createContext(null);
 
@@ -32,6 +33,10 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = (token, userData) => {
+    if (DEMO_MODE) {
+      setUser(userData);
+      return;
+    }
     localStorage.setItem("token", token);
     setUser(userData);
   };

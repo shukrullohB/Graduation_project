@@ -1,13 +1,17 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+﻿import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 import StudentDashboard from "../pages/StudentDashboard";
 import TeacherDashboard from "../pages/TeacherDashboard";
 import QuestionPage from "../pages/QuestionPage";
 import AnswerSubmitPage from "../pages/AnswerSubmitPage";
+import MyAnswersPage from "../pages/MyAnswersPage";
 import TeacherReviewPage from "../pages/TeacherReviewPage";
+import CreateQuestionPage from "../pages/CreateQuestionPage";
 import AnalyticsDashboard from "../pages/AnalyticsDashboard";
+import NotFoundPage from "../pages/NotFoundPage";
 
 export default function AppRoutes() {
   const { user } = useAuth();
@@ -15,20 +19,20 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
 
       <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
         <Route path="/student" element={<StudentDashboard />} />
         <Route path="/student/question/:id" element={<QuestionPage />} />
         <Route path="/student/submit/:id" element={<AnswerSubmitPage />} />
+        <Route path="/student/my-answers" element={<MyAnswersPage />} />
         <Route path="/student/analytics" element={<AnalyticsDashboard />} />
       </Route>
 
       <Route element={<ProtectedRoute allowedRoles={["teacher"]} />}>
         <Route path="/teacher" element={<TeacherDashboard />} />
-        <Route
-          path="/teacher/review/:answerId"
-          element={<TeacherReviewPage />}
-        />
+        <Route path="/teacher/create-question" element={<CreateQuestionPage />} />
+        <Route path="/teacher/review/:answerId" element={<TeacherReviewPage />} />
         <Route path="/teacher/analytics" element={<AnalyticsDashboard />} />
       </Route>
 
@@ -44,7 +48,7 @@ export default function AppRoutes() {
           )
         }
       />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
