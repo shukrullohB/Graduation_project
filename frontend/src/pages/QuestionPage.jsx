@@ -13,9 +13,16 @@ export default function QuestionPage() {
 
   return (
     <div className="page">
-      <h2>{question?.title}</h2>
-      <div className="question-body">
-        <p>{question?.description}</p>
+      <div className="card">
+        <div className="card-header">
+          <div>
+            <div className="card-title">{question?.title}</div>
+            <div className="card-subtitle">Question Detail</div>
+          </div>
+        </div>
+        <p style={{ lineHeight: "1.7", color: "var(--gray-700)" }}>
+          {question?.description}
+        </p>
       </div>
     </div>
   );

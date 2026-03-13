@@ -12,10 +12,12 @@ export default function Navbar() {
     navigate("/login");
   };
 
+  const initials = user.username?.slice(0, 2).toUpperCase() ?? "U";
+
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">GradProject</Link>
+        <Link to="/">ASAG</Link>
       </div>
       <div className="navbar-links">
         {user.role === "student" && (
@@ -34,10 +36,14 @@ export default function Navbar() {
         )}
       </div>
       <div className="navbar-user">
-        <span>
-          {user.username} ({user.role})
-        </span>
-        <button onClick={handleLogout}>Logout</button>
+        <div className="navbar-user-info">
+          <span className="navbar-user-name">{user.username}</span>
+          <span className="navbar-user-role">{user.role}</span>
+        </div>
+        <div className="navbar-avatar">{initials}</div>
+        <button className="btn-logout" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </nav>
   );

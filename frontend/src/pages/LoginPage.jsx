@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { login as loginApi } from "../api/auth.api";
@@ -6,7 +6,7 @@ import { useToast } from "../context/ToastContext";
 import { DEMO_MODE } from "../api/mockData";
 
 export default function LoginPage() {
-  const [form, setForm] = useState({ username: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -28,35 +28,49 @@ export default function LoginPage() {
 
   return (
     <div className="auth-page">
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <h2>Login</h2>
+      <div className="auth-card">
+        <div className="auth-logo">
+          <div className="auth-logo-icon">&#127891;</div>
+          <h1>Welcome back</h1>
+          <p>Sign in to ASAG Intelligent Grading Platform</p>
+        </div>
         {DEMO_MODE && (
           <div className="demo-hint">
-            Demo mode: use <strong>student</strong> or <strong>teacher</strong>{" "}
-            as username
+            &#128273; Demo mode: use <strong>student</strong> or{" "}
+            <strong>teacher</strong> as email, any password.
           </div>
         )}
-        <input
-          type="text"
-          placeholder="Username"
-          value={form.username}
-          onChange={(e) => setForm({ ...form, username: e.target.value })}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          required
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-        <p className="auth-switch">
-          Don&apos;t have an account? <Link to="/register">Register</Link>
-        </p>
-      </form>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              className="form-input"
+              placeholder="Enter your email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              className="form-input"
+              placeholder="Enter your password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              required
+            />
+          </div>
+          <button type="submit" className="btn auth-submit" disabled={loading}>
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
+          <p className="auth-switch">
+            Don&apos;t have an account? <Link to="/register">Create one</Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

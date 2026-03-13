@@ -13,24 +13,41 @@ export default function TeacherDashboard() {
 
   return (
     <div className="dashboard">
-      <h2>Teacher Dashboard</h2>
-      <h3>Pending Reviews ({pending?.length ?? 0})</h3>
-      <div className="answer-list">
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Teacher Dashboard</h1>
+          <p className="page-subtitle">Answers awaiting your review</p>
+        </div>
+        <span className="badge badge--pending">
+          {pending?.length ?? 0} pending
+        </span>
+      </div>
+      <div className="list-grid">
+        {pending?.length === 0 && (
+          <div className="empty-state">
+            <div className="empty-state-icon">✅</div>
+            <p>All caught up — no pending reviews.</p>
+          </div>
+        )}
         {pending?.map((answer) => (
           <div key={answer.id} className="answer-card">
-            <p>
-              <strong>{answer.student_username}</strong>
-            </p>
-            <p>{answer.question_title}</p>
+            <div className="answer-card-meta">
+              <span className="badge badge--pending">Pending</span>
+              <span>{answer.student_username}</span>
+            </div>
+            <div className="answer-card-title">{answer.question_title}</div>
             <p className="answer-preview">
-              {answer.answer_text?.slice(0, 120)}...
+              {answer.answer_text?.slice(0, 140)}
+              {answer.answer_text?.length > 140 ? "..." : ""}
             </p>
-            <Link to={`/teacher/review/${answer.id}`} className="btn">
-              Review
-            </Link>
+            <div className="answer-card-footer">
+              <span />
+              <Link to={`/teacher/review/${answer.id}`} className="btn">
+                Review
+              </Link>
+            </div>
           </div>
         ))}
-        {pending?.length === 0 && <p>No pending reviews.</p>}
       </div>
     </div>
   );

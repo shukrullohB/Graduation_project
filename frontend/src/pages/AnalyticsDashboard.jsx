@@ -21,22 +21,26 @@ export default function AnalyticsDashboard() {
 
   return (
     <div className="analytics-page">
-      <h2>{isTeacher ? "Teacher" : "Student"} Analytics</h2>
-
-      <section className="chart-section">
-        <h3>Average Score by Subject</h3>
-        <AverageScore data={analytics?.avgScores ?? []} />
-      </section>
-
-      <section className="chart-section">
-        <h3>Common Mistakes</h3>
-        <Mistakes data={analytics?.mistakes ?? []} />
-      </section>
-
-      <section className="chart-section">
-        <h3>Score Distribution</h3>
-        <ScoreDistribution data={analytics?.distribution ?? []} />
-      </section>
+      <div className="page-header">
+        <div>
+          <h2>{isTeacher ? "Teacher" : "Student"} Analytics</h2>
+          <p className="page-subtitle">Performance overview and insights</p>
+        </div>
+      </div>
+      <div className="charts-grid">
+        <div className="chart-section">
+          <h3>Average Score by Subject</h3>
+          <AverageScore data={analytics?.avgScores ?? []} />
+        </div>
+        <div className="chart-section">
+          <h3>Common Mistakes</h3>
+          <Mistakes data={analytics?.mistakes ?? []} />
+        </div>
+        <div className="chart-section">
+          <h3>Score Distribution</h3>
+          <ScoreDistribution data={analytics?.distribution ?? []} />
+        </div>
+      </div>
     </div>
   );
 }

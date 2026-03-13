@@ -21,15 +21,31 @@ export default function StudentDashboard() {
 
   return (
     <div className="dashboard">
-      <h2>Student Dashboard</h2>
-      <div className="question-list">
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Student Dashboard</h1>
+          <p className="page-subtitle">Browse and answer questions below</p>
+        </div>
+      </div>
+      <div className="list-grid">
+        {questions?.length === 0 && (
+          <div className="empty-state">
+            <div className="empty-state-icon">📚</div>
+            <p>No questions available yet.</p>
+          </div>
+        )}
         {questions?.map((q) => (
           <div key={q.id} className="question-card">
-            <h4>{q.title}</h4>
-            <p>{q.description?.slice(0, 100)}...</p>
-            <div className="question-card-footer">
+            <div className="question-card-body">
+              <h4>{q.title}</h4>
+              <p>
+                {q.description?.slice(0, 110)}
+                {q.description?.length > 110 ? "..." : ""}
+              </p>
+            </div>
+            <div className="question-card-action">
               {answeredIds.has(q.id) ? (
-                <span className="badge badge--done">Submitted</span>
+                <span className="badge badge--done">✓ Submitted</span>
               ) : (
                 <Link to={`/student/submit/${q.id}`} className="btn">
                   Answer

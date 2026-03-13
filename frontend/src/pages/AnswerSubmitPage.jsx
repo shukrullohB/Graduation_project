@@ -34,20 +34,49 @@ export default function AnswerSubmitPage() {
 
   return (
     <div className="page">
-      <h2>{question?.title}</h2>
-      <p>{question?.description}</p>
-      <form onSubmit={handleSubmit}>
+      <div className="page-header">
+        <div>
+          <h2>{question?.title}</h2>
+          <p className="page-subtitle">Write your answer below</p>
+        </div>
+      </div>
+      <div className="card" style={{ marginBottom: "1.25rem" }}>
+        <div className="review-box-label" style={{ marginBottom: "0.5rem" }}>
+          📖 Question
+        </div>
+        <p style={{ color: "var(--gray-700)", lineHeight: "1.7" }}>
+          {question?.description}
+        </p>
+      </div>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          borderRadius: "var(--radius-lg)",
+          padding: "1.5rem",
+          boxShadow: "var(--shadow-sm)",
+        }}
+      >
         {error && <p className="error-msg">{error}</p>}
-        <textarea
-          rows={8}
-          placeholder="Write your answer here..."
-          value={answerText}
-          onChange={(e) => setAnswerText(e.target.value)}
-          required
-        />
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Submitting..." : "Submit Answer"}
-        </button>
+        <div className="form-group">
+          <label className="form-label">Your Answer</label>
+          <textarea
+            rows={8}
+            placeholder="Write your answer here..."
+            value={answerText}
+            onChange={(e) => setAnswerText(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-actions">
+          <button type="submit" disabled={submitting}>
+            {submitting ? "Submitting…" : "Submit Answer"}
+          </button>
+        </div>
       </form>
     </div>
   );
