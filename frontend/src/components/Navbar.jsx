@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
@@ -17,21 +17,28 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">ASAG</Link>
+        <Link to="/">
+          <span className="navbar-brand-mark">A</span>
+          <span className="navbar-brand-text">ASAG</span>
+        </Link>
       </div>
       <div className="navbar-links">
         {user.role === "student" && (
           <>
-            <Link to="/student">Dashboard</Link>
-            <Link to="/student/my-answers">My Answers</Link>
-            <Link to="/student/analytics">Analytics</Link>
+            <NavLink to="/student" end>
+              Dashboard
+            </NavLink>
+            <NavLink to="/student/my-answers">My Answers</NavLink>
+            <NavLink to="/student/analytics">Analytics</NavLink>
           </>
         )}
         {user.role === "teacher" && (
           <>
-            <Link to="/teacher">Dashboard</Link>
-            <Link to="/teacher/create-question">+ Question</Link>
-            <Link to="/teacher/analytics">Analytics</Link>
+            <NavLink to="/teacher" end>
+              Dashboard
+            </NavLink>
+            <NavLink to="/teacher/create-question">+ Question</NavLink>
+            <NavLink to="/teacher/analytics">Analytics</NavLink>
           </>
         )}
       </div>
@@ -42,7 +49,10 @@ export default function Navbar() {
         </div>
         <div className="navbar-avatar">{initials}</div>
         <button className="btn-logout" onClick={handleLogout}>
-          Logout
+          <span className="btn-logout-icon" aria-hidden="true">
+            ↪
+          </span>
+          <span>Logout</span>
         </button>
       </div>
     </nav>

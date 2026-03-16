@@ -43,21 +43,49 @@ export default function CreateQuestionPage() {
   };
 
   return (
-    <div className="page">
-      <h2>Create New Question</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Title
-          <input
-            type="text"
-            placeholder="Short title for the question"
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            required
-          />
-        </label>
-        <label>
-          Question Description
+    <div className="page create-question-page">
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Create New Question</h1>
+          <p className="page-subtitle">
+            Build a clear assignment prompt and reference answer for AI scoring.
+          </p>
+        </div>
+      </div>
+
+      <div className="question-builder-tip">
+        <strong>Best practice:</strong> Keep the prompt specific and provide a
+        concise reference answer with key concepts you expect from students.
+      </div>
+
+      <form onSubmit={handleSubmit} className="question-builder-form">
+        <div className="question-builder-grid">
+          <label className="form-group">
+            <span className="form-label">Title</span>
+            <input
+              type="text"
+              placeholder="Short title for the question"
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+              required
+            />
+          </label>
+          <label className="form-group question-builder-score">
+            <span className="form-label">Max Score</span>
+            <input
+              type="number"
+              min={1}
+              max={10}
+              value={form.max_score}
+              onChange={(e) =>
+                setForm({ ...form, max_score: Number(e.target.value) })
+              }
+            />
+          </label>
+        </div>
+
+        <label className="form-group">
+          <span className="form-label">Question Description</span>
           <textarea
             rows={4}
             placeholder="Full question text shown to students..."
@@ -66,8 +94,9 @@ export default function CreateQuestionPage() {
             required
           />
         </label>
-        <label>
-          Reference Answer (used by AI for scoring)
+
+        <label className="form-group">
+          <span className="form-label">Reference Answer (AI baseline)</span>
           <textarea
             rows={5}
             placeholder="Model/ideal answer for this question..."
@@ -76,18 +105,6 @@ export default function CreateQuestionPage() {
               setForm({ ...form, reference_answer: e.target.value })
             }
             required
-          />
-        </label>
-        <label>
-          Max Score
-          <input
-            type="number"
-            min={1}
-            max={10}
-            value={form.max_score}
-            onChange={(e) =>
-              setForm({ ...form, max_score: Number(e.target.value) })
-            }
           />
         </label>
         <div className="form-actions">

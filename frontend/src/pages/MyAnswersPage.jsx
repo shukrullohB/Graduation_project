@@ -12,12 +12,34 @@ export default function MyAnswersPage() {
 
   if (isLoading) return <LoadingSpinner text="Loading your answers..." />;
 
+  const totalAnswers = answers?.length ?? 0;
+  const reviewedAnswers =
+    answers?.filter((answer) => answer.score != null).length ?? 0;
+  const pendingAnswers = totalAnswers - reviewedAnswers;
+
   return (
-    <div className="page">
+    <div className="page my-answers-page">
       <div className="page-header">
         <div>
           <h1 className="page-title">My Answers</h1>
           <p className="page-subtitle">Your submitted answers and scores</p>
+        </div>
+      </div>
+      <div className="stats-grid my-answers-stats">
+        <div className="stat-card">
+          <div className="stat-card-icon blue">🗂</div>
+          <div className="stat-card-value">{totalAnswers}</div>
+          <div className="stat-card-label">Total Submissions</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-card-icon green">✅</div>
+          <div className="stat-card-value">{reviewedAnswers}</div>
+          <div className="stat-card-label">Reviewed</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-card-icon orange">⏳</div>
+          <div className="stat-card-value">{pendingAnswers}</div>
+          <div className="stat-card-label">Pending</div>
         </div>
       </div>
       {answers?.length === 0 && (
@@ -30,14 +52,20 @@ export default function MyAnswersPage() {
         {answers?.map((answer) => (
           <div key={answer.id} className="answer-result-card">
             <div className="answer-result-card-header">
-              <h4>{answer.question_title}</h4>
-              {answer.score != null ? (
-                <ScoreBadge score={answer.score} />
-              ) : (
-                <span className="badge badge--pending">Awaiting review</span>
-              )}
+              <div className="answer-result-card-title-wrap">
+                <h4>{answer.question_title}</h4>
+                <span className="answer-result-id">Submission #{answer.id}</span>
+              </div>
+              <div className="answer-result-status">
+                {answer.score != null ? (
+                  <ScoreBadge score={answer.score} />
+                ) : (
+                  <span className="badge badge--pending">Awaiting review</span>
+                )}
+              </div>
             </div>
             <div className="answer-result-card-body">
+              <div className="answer-result-section-title">Your response</div>
               <p className="answer-text">{answer.answer_text}</p>
               {answer.score != null && (
                 <div className="scores-row">
@@ -53,6 +81,7 @@ export default function MyAnswersPage() {
                   )}
                 </div>
               )}
+              <div className="answer-result-section-title">Feedback</div>
               <FeedbackBox feedback={answer.feedback} />
             </div>
           </div>
