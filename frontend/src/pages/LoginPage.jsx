@@ -27,49 +27,76 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <div className="auth-logo">
-          <div className="auth-logo-icon">&#127891;</div>
-          <h1>Welcome back</h1>
-          <p>Sign in to ASAG Intelligent Grading Platform</p>
+    <div className="auth-page auth-page--login">
+      <div className="login-layout">
+        <aside className="login-hero">
+          <span className="login-hero-badge">AI-powered Education</span>
+          <div>
+            <h1>Smarter Assessment for Modern Classrooms</h1>
+            <p>
+              Review faster, grade fairer, and track progress with AI-assisted
+              feedback for teachers and students.
+            </p>
+          </div>
+          <div className="login-hero-stats">
+            <div>
+              <strong>24/7</strong>
+              <span>Availability</span>
+            </div>
+            <div>
+              <strong>Instant</strong>
+              <span>AI feedback</span>
+            </div>
+            <div>
+              <strong>Role-based</strong>
+              <span>Secure access</span>
+            </div>
+          </div>
+        </aside>
+
+        <div className="auth-card auth-card--login">
+          <div className="auth-logo">
+            <div className="auth-logo-icon">&#127891;</div>
+            <h1>Welcome back</h1>
+            <p>Sign in to ASAG Intelligent Grading Platform</p>
+          </div>
+          {DEMO_MODE && (
+            <div className="demo-hint">
+              &#128273; Demo mode: use <strong>student</strong> or{" "}
+              <strong>teacher</strong> as email, any password.
+            </div>
+          )}
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label className="form-label">Email</label>
+              <input
+                type="email"
+                className="form-input"
+                placeholder="Enter your email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <input
+                type="password"
+                className="form-input"
+                placeholder="Enter your password"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                required
+              />
+            </div>
+            <button type="submit" className="btn auth-submit" disabled={loading}>
+              {loading ? "Signing in..." : "Sign In"}
+            </button>
+            <p className="auth-switch">
+              Don&apos;t have an account? <Link to="/register">Create one</Link>
+            </p>
+          </form>
         </div>
-        {DEMO_MODE && (
-          <div className="demo-hint">
-            &#128273; Demo mode: use <strong>student</strong> or{" "}
-            <strong>teacher</strong> as email, any password.
-          </div>
-        )}
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label">Email</label>
-            <input
-              type="email"
-              className="form-input"
-              placeholder="Enter your email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Password</label>
-            <input
-              type="password"
-              className="form-input"
-              placeholder="Enter your password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              required
-            />
-          </div>
-          <button type="submit" className="btn auth-submit" disabled={loading}>
-            {loading ? "Signing in..." : "Sign In"}
-          </button>
-          <p className="auth-switch">
-            Don&apos;t have an account? <Link to="/register">Create one</Link>
-          </p>
-        </form>
       </div>
     </div>
   );
