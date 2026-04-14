@@ -82,7 +82,15 @@ export default function MyAnswersPage() {
                 </div>
               )}
               <div className="answer-result-section-title">Feedback</div>
-              <FeedbackBox feedback={answer.feedback} />
+              {answer.teacher_feedback ? (
+                <FeedbackBox feedback={`Teacher: ${answer.teacher_feedback}`} />
+              ) : null}
+              {answer.ai_feedback ? (
+                <FeedbackBox feedback={`AI: ${answer.ai_feedback}`} />
+              ) : null}
+              {!answer.teacher_feedback && !answer.ai_feedback ? (
+                <FeedbackBox feedback={null} />
+              ) : null}
             </div>
           </div>
         ))}

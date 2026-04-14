@@ -66,13 +66,15 @@ export default function LoginPage() {
               <strong>teacher</strong> as email, any password.
             </div>
           )}
-          <form className="auth-form" onSubmit={handleSubmit}>
+          <form className="auth-form" onSubmit={handleSubmit} autoComplete="off">
             <div className="form-group">
               <label className="form-label">Email</label>
               <input
                 type="email"
                 className="form-input"
                 placeholder="Enter your email"
+                autoComplete="off"
+                name="asag_email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 required
@@ -84,6 +86,8 @@ export default function LoginPage() {
                 type="password"
                 className="form-input"
                 placeholder="Enter your password"
+                autoComplete="new-password"
+                name="asag_password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 required

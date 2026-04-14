@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getStudentAnalytics, getTeacherAnalytics } from "../api/analytics.api";
 import AverageScore from "../components/charts/AverageScore";
@@ -7,6 +8,7 @@ import ScoreDistribution from "../components/charts/ScoreDistribution";
 
 export default function AnalyticsDashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const isTeacher = user?.role === "teacher";
 
   const { data: analytics, isLoading } = useQuery({
@@ -26,6 +28,13 @@ export default function AnalyticsDashboard() {
           <h2>{isTeacher ? "Teacher" : "Student"} Analytics</h2>
           <p className="page-subtitle">Performance overview and insights</p>
         </div>
+        <button
+          type="button"
+          className="btn btn--secondary"
+          onClick={() => navigate(isTeacher ? "/teacher" : "/student")}
+        >
+          ← Back
+        </button>
       </div>
       <div className="charts-grid">
         <div className="chart-section">

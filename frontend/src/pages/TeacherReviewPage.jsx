@@ -36,6 +36,10 @@ export default function TeacherReviewPage() {
 
   if (isLoading) return <p>Loading...</p>;
 
+  const maxScore = answer?.question_max_score ?? 10;
+  const scorePreviewPercent =
+    score === "" ? null : Math.round((Number(score) / maxScore) * 100);
+
   return (
     <div className="page">
       <div className="page-header">
@@ -86,17 +90,20 @@ export default function TeacherReviewPage() {
         {error && <p className="error-msg">{error}</p>}
         <form onSubmit={handleSubmit} style={{ display: "contents" }}>
           <div className="form-group">
-            <label className="form-label">Score (0–100)</label>
+            <label className="form-label">Score (0–{maxScore})</label>
             <div className="score-input-row">
               <input
                 type="number"
                 min={0}
-                max={100}
+                max={maxScore}
+                step="0.1"
                 value={score}
                 onChange={(e) => setScore(e.target.value)}
                 required
               />
-              {score !== "" && <ScoreBadge score={Number(score)} />}
+              {scorePreviewPercent != null && (
+                <ScoreBadge score={scorePreviewPercent} />
+              )}
             </div>
           </div>
           <div className="form-group">

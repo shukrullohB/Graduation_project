@@ -51,6 +51,13 @@ export default function CreateQuestionPage() {
             Build a clear assignment prompt and reference answer for AI scoring.
           </p>
         </div>
+        <button
+          type="button"
+          className="btn btn--secondary"
+          onClick={() => navigate("/teacher")}
+        >
+          ← Back
+        </button>
       </div>
 
       <div className="question-builder-tip">
@@ -58,55 +65,64 @@ export default function CreateQuestionPage() {
         concise reference answer with key concepts you expect from students.
       </div>
 
-      <form onSubmit={handleSubmit} className="question-builder-form">
-        <div className="question-builder-grid">
+      <form onSubmit={handleSubmit} className="question-builder-form modern-question-form">
+        <div className="question-form-section">
+          <h3>Question Basics</h3>
+          <div className="question-builder-grid">
+            <label className="form-group">
+              <span className="form-label">Title</span>
+              <input
+                type="text"
+                placeholder="Short title for the question"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                required
+              />
+            </label>
+            <label className="form-group question-builder-score">
+              <span className="form-label">Max Score</span>
+              <input
+                type="number"
+                min={1}
+                max={10}
+                value={form.max_score}
+                onChange={(e) =>
+                  setForm({ ...form, max_score: Number(e.target.value) })
+                }
+              />
+            </label>
+          </div>
+        </div>
+
+        <div className="question-form-section">
+          <h3>Student Prompt</h3>
           <label className="form-group">
-            <span className="form-label">Title</span>
-            <input
-              type="text"
-              placeholder="Short title for the question"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
+            <span className="form-label">Question Description</span>
+            <textarea
+              rows={4}
+              placeholder="Full question text shown to students..."
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
               required
-            />
-          </label>
-          <label className="form-group question-builder-score">
-            <span className="form-label">Max Score</span>
-            <input
-              type="number"
-              min={1}
-              max={10}
-              value={form.max_score}
-              onChange={(e) =>
-                setForm({ ...form, max_score: Number(e.target.value) })
-              }
             />
           </label>
         </div>
 
-        <label className="form-group">
-          <span className="form-label">Question Description</span>
-          <textarea
-            rows={4}
-            placeholder="Full question text shown to students..."
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            required
-          />
-        </label>
-
-        <label className="form-group">
-          <span className="form-label">Reference Answer (AI baseline)</span>
-          <textarea
-            rows={5}
-            placeholder="Model/ideal answer for this question..."
-            value={form.reference_answer}
-            onChange={(e) =>
-              setForm({ ...form, reference_answer: e.target.value })
-            }
-            required
-          />
-        </label>
+        <div className="question-form-section">
+          <h3>AI Evaluation Baseline</h3>
+          <label className="form-group">
+            <span className="form-label">Reference Answer (AI baseline)</span>
+            <textarea
+              rows={5}
+              placeholder="Model/ideal answer for this question..."
+              value={form.reference_answer}
+              onChange={(e) =>
+                setForm({ ...form, reference_answer: e.target.value })
+              }
+              required
+            />
+          </label>
+        </div>
         <div className="form-actions">
           <button
             type="button"

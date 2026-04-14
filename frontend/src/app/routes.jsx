@@ -9,8 +9,10 @@ import QuestionPage from "../pages/QuestionPage";
 import AnswerSubmitPage from "../pages/AnswerSubmitPage";
 import MyAnswersPage from "../pages/MyAnswersPage";
 import TeacherReviewPage from "../pages/TeacherReviewPage";
+import BulkReviewPage from "../pages/BulkReviewPage";
 import CreateQuestionPage from "../pages/CreateQuestionPage";
 import AnalyticsDashboard from "../pages/AnalyticsDashboard";
+import TeacherProfilePage from "../pages/TeacherProfilePage";
 import NotFoundPage from "../pages/NotFoundPage";
 
 export default function AppRoutes() {
@@ -32,8 +34,10 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute allowedRoles={["teacher"]} />}>
         <Route path="/teacher" element={<TeacherDashboard />} />
         <Route path="/teacher/create-question" element={<CreateQuestionPage />} />
+        <Route path="/teacher/review-queue" element={<BulkReviewPage />} />
         <Route path="/teacher/review/:answerId" element={<TeacherReviewPage />} />
         <Route path="/teacher/analytics" element={<AnalyticsDashboard />} />
+        <Route path="/teacher/profile" element={<TeacherProfilePage />} />
       </Route>
 
       <Route
