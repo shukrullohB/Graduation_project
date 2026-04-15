@@ -3,21 +3,25 @@ import { Link } from "react-router-dom";
 import { getQuestions } from "../api/questions.api";
 import { getMyAnswers } from "../api/answers.api";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useAuth } from "../context/AuthContext";
 
 export default function StudentDashboard() {
+  const { user } = useAuth();
+
   const { data: questions, isLoading: qLoading } = useQuery({
     queryKey: ["questions"],
     queryFn: () => getQuestions().then((r) => r.data),
   });
 
-  const { data: answers } = useQuery({
-    queryKey: ["myAnswers"],
+  const { data: answers, isLoading: aLoading } = useQuery({
+    queryKey: ["myAnswers", user?.id],
     queryFn: () => getMyAnswers().then((r) => r.data),
+    enabled: Boolean(user?.id),
   });
 
-  const answeredIds = new Set(answers?.map((a) => a.question_id));
+  const answeredIds = new Set((answers ?? []).map((a) => Number(a.question_id)));
 
-  if (qLoading) return <LoadingSpinner />;
+  if (qLoading || aLoading) return <LoadingSpinner />;
 
   return (
     <div className="dashboard">
@@ -30,7 +34,7 @@ export default function StudentDashboard() {
       <div className="list-grid">
         {questions?.length === 0 && (
           <div className="empty-state">
-            <div className="empty-state-icon">📚</div>
+            <div className="empty-state-icon">No data</div>
             <p>No questions available yet.</p>
           </div>
         )}
@@ -44,8 +48,8 @@ export default function StudentDashboard() {
               </p>
             </div>
             <div className="question-card-action">
-              {answeredIds.has(q.id) ? (
-                <span className="badge badge--done">✓ Submitted</span>
+              {answeredIds.has(Number(q.id)) ? (
+                <span className="badge badge--done">Submitted</span>
               ) : (
                 <Link to={`/student/submit/${q.id}`} className="btn">
                   Answer

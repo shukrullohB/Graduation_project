@@ -3,11 +3,15 @@ import { getMyAnswers } from "../api/answers.api";
 import ScoreBadge from "../components/ScoreBadge";
 import FeedbackBox from "../components/FeedbackBox";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useAuth } from "../context/AuthContext";
 
 export default function MyAnswersPage() {
+  const { user } = useAuth();
+
   const { data: answers, isLoading } = useQuery({
-    queryKey: ["myAnswers"],
+    queryKey: ["myAnswers", user?.id],
     queryFn: () => getMyAnswers().then((r) => r.data),
+    enabled: Boolean(user?.id),
   });
 
   if (isLoading) return <LoadingSpinner text="Loading your answers..." />;

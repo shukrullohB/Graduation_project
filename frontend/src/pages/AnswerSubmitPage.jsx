@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getQuestion } from "../api/questions.api";
 import { submitAnswer } from "../api/answers.api";
+import { useAuth } from "../context/AuthContext";
 
 export default function AnswerSubmitPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
   const [answerText, setAnswerText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -16,13 +20,41 @@ export default function AnswerSubmitPage() {
     queryFn: () => getQuestion(id).then((r) => r.data),
   });
 
+  const answerQueryKey = ["myAnswers", user?.id];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSubmitting(true);
+
     try {
-      await submitAnswer({ question_id: id, answer_text: answerText });
-      navigate("/student");
+      await submitAnswer({ question_id: Number(id), answer_text: answerText });
+
+      queryClient.setQueryData(answerQueryKey, (prev) => {
+        const current = Array.isArray(prev) ? prev : [];
+        const qid = Number(id);
+
+        if (current.some((a) => Number(a?.question_id) === qid)) {
+          return current;
+        }
+
+        return [
+          {
+            id: `temp-${qid}-${Date.now()}`,
+            question_id: qid,
+            answer_text: answerText,
+            score: null,
+            ai_score: null,
+            teacher_feedback: null,
+            ai_feedback: null,
+            question_title: question?.title ?? `Question #${qid}`,
+          },
+          ...current,
+        ];
+      });
+
+      await queryClient.invalidateQueries({ queryKey: answerQueryKey });
+      navigate("/student", { replace: true });
     } catch (err) {
       setError(err.response?.data?.detail || "Submission failed");
     } finally {
@@ -42,7 +74,7 @@ export default function AnswerSubmitPage() {
       </div>
       <div className="card" style={{ marginBottom: "1.25rem" }}>
         <div className="review-box-label" style={{ marginBottom: "0.5rem" }}>
-          📖 Question
+          Question
         </div>
         <p style={{ color: "var(--gray-700)", lineHeight: "1.7" }}>
           {question?.description}
@@ -74,7 +106,7 @@ export default function AnswerSubmitPage() {
         </div>
         <div className="form-actions">
           <button type="submit" disabled={submitting}>
-            {submitting ? "Submitting…" : "Submit Answer"}
+            {submitting ? "Submitting..." : "Submit Answer"}
           </button>
         </div>
       </form>

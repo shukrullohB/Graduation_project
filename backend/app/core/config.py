@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -26,6 +27,21 @@ class Settings(BaseSettings):
 		env_file_encoding="utf-8",
 		case_sensitive=False,
 	)
+
+	@field_validator("debug", mode="before")
+	@classmethod
+	def parse_debug(cls, value):
+		"""
+		Allow non-boolean deployment values such as DEBUG=release
+		without crashing app startup.
+		"""
+		if isinstance(value, str):
+			raw = value.strip().lower()
+			if raw in {"release", "prod", "production"}:
+				return False
+			if raw in {"dev", "development"}:
+				return True
+		return value
 
 
 @lru_cache

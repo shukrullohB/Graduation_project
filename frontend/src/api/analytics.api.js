@@ -5,6 +5,18 @@ import {
   mockAnalyticsTeacher,
 } from "./mockData";
 
+const toPercent = (score, maxScoreHint = 5) => {
+  if (score == null) return null;
+  const numeric = Number(score);
+  if (!Number.isFinite(numeric)) return null;
+
+  if (numeric >= 0 && numeric <= 1) return Math.round(numeric * 100);
+  if (maxScoreHint > 0 && numeric >= 0 && numeric <= maxScoreHint) {
+    return Math.round((numeric / maxScoreHint) * 100);
+  }
+  return Math.round(numeric);
+};
+
 const avg = (arr) => {
   if (!arr.length) return 0;
   return Number((arr.reduce((s, v) => s + v, 0) / arr.length).toFixed(2));
@@ -27,19 +39,30 @@ const mapScoresToDistribution = (scores) => {
 export const getStudentAnalytics = async () => {
   if (DEMO_MODE) return Promise.resolve({ data: mockAnalyticsStudent });
 
-  const answersRes = await http.get("/answers/my");
+  const [answersRes, questionsRes] = await Promise.all([
+    http.get("/answers/my"),
+    http.get("/questions"),
+  ]);
   const answers = answersRes.data || [];
+  const questionMap = Object.fromEntries(
+    (questionsRes.data || []).map((q) => [q.id, q]),
+  );
+
+  const toAnswerPercent = (answer, rawScore) =>
+    toPercent(rawScore, questionMap[answer.question_id]?.max_score ?? 5);
 
   const teacherScores = answers
-    .map((a) => a.teacher_score)
+    .map((a) => toAnswerPercent(a, a.teacher_score))
     .filter((v) => typeof v === "number");
   const aiScores = answers
-    .map((a) => a.ai_score)
+    .map((a) => toAnswerPercent(a, a.ai_score))
     .filter((v) => typeof v === "number");
   const finalScores = answers
-    .map((a) =>
-      typeof a.teacher_score === "number" ? a.teacher_score : a.ai_score,
-    )
+    .map((a) => {
+      const raw =
+        typeof a.teacher_score === "number" ? a.teacher_score : a.ai_score;
+      return toAnswerPercent(a, raw);
+    })
     .filter((v) => typeof v === "number");
 
   return {
@@ -66,13 +89,29 @@ export const getStudentAnalytics = async () => {
 export const getTeacherAnalytics = async () => {
   if (DEMO_MODE) return Promise.resolve({ data: mockAnalyticsTeacher });
 
-  const res = await http.get("/analytics/overview");
+  const [res, questionsRes] = await Promise.all([
+    http.get("/analytics/overview"),
+    http.get("/questions"),
+  ]);
   const d = res.data || {};
+  const questionMaxScores = (questionsRes.data || [])
+    .map((q) => Number(q.max_score))
+    .filter((v) => Number.isFinite(v) && v > 0);
+  const maxScoreHint = questionMaxScores.length
+    ? avg(questionMaxScores)
+    : 5;
+
   return {
     data: {
       avgScores: [
-        { subject: "Teacher Avg", avgScore: d.avg_teacher_score ?? 0 },
-        { subject: "AI Avg", avgScore: d.avg_ai_score ?? 0 },
+        {
+          subject: "Teacher Avg",
+          avgScore: toPercent(d.avg_teacher_score ?? 0, maxScoreHint) ?? 0,
+        },
+        {
+          subject: "AI Avg",
+          avgScore: toPercent(d.avg_ai_score ?? 0, maxScoreHint) ?? 0,
+        },
       ],
       mistakes: [
         {
