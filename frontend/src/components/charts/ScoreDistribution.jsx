@@ -19,13 +19,15 @@ export default function ScoreDistribution({ data }) {
           nameKey="range"
           cx="50%"
           cy="50%"
-          outerRadius={80}
+          innerRadius={48}
+          outerRadius={82}
+          paddingAngle={2}
         >
           {data.map((_, index) => (
             <Cell key={index} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip />
+        <Tooltip formatter={(value, name) => [value, name]} />
         <Legend />
       </PieChart>
     </ResponsiveContainer>

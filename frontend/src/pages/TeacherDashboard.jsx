@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { getTeacherAnalytics } from "../api/analytics.api";
 import { getPendingAnswers } from "../api/review.api";
@@ -9,7 +9,6 @@ import { useAuth } from "../context/AuthContext";
 export default function TeacherDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [query, setQuery] = useState("");
   const [isDark, setIsDark] = useState(false);
 
   const { data: pending, isLoading, refetch } = useQuery({
@@ -46,25 +45,6 @@ export default function TeacherDashboard() {
 
   const nextReview = queue[0];
 
-  const filteredQueue = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return queue;
-    return queue.filter((item) => {
-      const haystack = [
-        item.question_title,
-        item.question_description,
-        item.student_username,
-        item.answer_text,
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-      return haystack.includes(q);
-    });
-  }, [queue, query]);
-
-  const nextFilteredReview = filteredQueue[0];
-
   if (isLoading) return <LoadingSpinner text="Loading teacher workspace..." />;
 
   const handleLogout = () => {
@@ -75,7 +55,7 @@ export default function TeacherDashboard() {
   const initials = user?.username?.slice(0, 2).toUpperCase() ?? "TE";
 
   return (
-    <div className={`dashboard teacher-dashboard teacher-shell ${isDark ? "teacher-shell--dark" : ""}`}>
+    <div className={`dashboard teacher-dashboard teacher-shell ${isDark ? "teacher-dashboard--dark" : ""}`}>
       <aside className="teacher-left-rail">
         <div className="teacher-left-brand">
           <div className="teacher-left-brand-mark">✦</div>
@@ -102,9 +82,9 @@ export default function TeacherDashboard() {
             <span className="teacher-left-nav-dot" />
             <span>Analytics</span>
           </NavLink>
-          {nextFilteredReview ? (
+          {nextReview ? (
             <Link
-              to={`/teacher/review/${nextFilteredReview.id}`}
+              to={`/teacher/review/${nextReview.id}`}
               className="teacher-left-nav-item"
             >
               <span className="teacher-left-nav-dot" />
@@ -133,8 +113,12 @@ export default function TeacherDashboard() {
               aria-label="Toggle theme"
               title={isDark ? "Switch to light mode" : "Switch to dark mode"}
             >
-              <span>☀</span>
-              <span>🌙</span>
+              <span className="teacher-theme-toggle-track" aria-hidden="true">
+                <span className="teacher-theme-toggle-knob" />
+              </span>
+              <span className="teacher-theme-toggle-label">
+                {isDark ? "Night" : "Light"}
+              </span>
             </button>
           </div>
           <div className="teacher-top-utils-right">
@@ -158,8 +142,8 @@ export default function TeacherDashboard() {
             <span className="teacher-hero-kicker">Teacher workspace</span>
             <h1 className="teacher-hero-title">Teacher Dashboard</h1>
             <p className="teacher-hero-text">
-              Track pending submissions, review faster, and keep grading quality
-              consistent across your class.
+              Everything important in one place: queue, analytics, and question
+              authoring. Use the actions below for a clean grading workflow.
             </p>
             <div className="teacher-hero-meta">
               <span className="badge badge--pending">{pendingCount} pending</span>
@@ -171,76 +155,75 @@ export default function TeacherDashboard() {
           </div>
         </section>
 
+        <section className="teacher-summary-grid">
+          <article className="teacher-summary-card">
+            <h3>Pending Reviews</h3>
+            <p>{pendingCount} answers waiting in queue</p>
+          </article>
+          <article className="teacher-summary-card">
+            <h3>High Priority</h3>
+            <p>{highPriorityCount} answers with AI &lt; 60%</p>
+          </article>
+          <article className="teacher-summary-card">
+            <h3>AI Queue Average</h3>
+            <p>{avgAiSuggestion}% suggested score</p>
+          </article>
+          <article className="teacher-summary-card">
+            <h3>Reviewed</h3>
+            <p>{Number.isFinite(reviewedCount) ? reviewedCount : 0} completed</p>
+          </article>
+        </section>
+
         <section className="teacher-primary-actions">
-          {nextFilteredReview ? (
-            <Link to={`/teacher/review/${nextFilteredReview.id}`} className="btn">
-              Review Next
+          <Link to="/teacher/review-queue" className="btn teacher-action-btn teacher-action-btn--primary">
+            Queue Workspace
+          </Link>
+          {nextReview ? (
+            <Link
+              to={`/teacher/review/${nextReview.id}`}
+              className="btn btn--secondary teacher-action-btn teacher-action-btn--emphasis"
+            >
+              Next Submission
             </Link>
-          ) : (
-            <button className="btn btn--secondary" disabled>
-              No Pending Review
-            </button>
-          )}
-          <Link to="/teacher/create-question" className="btn btn--secondary">
-            + Create Question
+          ) : null}
+          <Link to="/teacher/create-question" className="btn btn--secondary teacher-action-btn">
+            Question Studio
           </Link>
-          <Link to="/teacher/analytics" className="btn btn--secondary">
-            Open Analytics
+          <Link to="/teacher/analytics" className="btn btn--secondary teacher-action-btn">
+            Insights Center
           </Link>
-          <button type="button" className="btn btn--secondary" onClick={() => refetch()}>
-            Refresh Queue
-          </button>
-          <input
-            className="teacher-action-search"
-            placeholder="Filter by student/question/answer..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <button type="button" className="btn btn--secondary" onClick={() => setQuery("")}>
-            Clear Search
+          <button type="button" className="btn btn--secondary teacher-action-btn" onClick={() => refetch()}>
+            Sync Queue
           </button>
         </section>
 
-        <section className="teacher-panel teacher-panel--queue" id="review-queue">
+        <section className="teacher-panel teacher-panel--workflow">
           <div className="teacher-panel-head">
-            <h2>Pending Reviews</h2>
-            <span className="badge badge--pending">{filteredQueue.length} pending</span>
+            <h2>Recommended Workflow</h2>
           </div>
-
-          {filteredQueue.length === 0 ? (
-            <div className="teacher-queue-empty">
-              <div className="teacher-queue-empty-icon">✅</div>
-              <h3>No pending reviews</h3>
-              <p>All submissions are reviewed. New answers will appear here automatically.</p>
-            </div>
-          ) : (
-            <div className="teacher-queue-list teacher-queue-list--cards">
-              {filteredQueue.map((answer) => (
-                <article key={answer.id} className="teacher-queue-item">
-                  <div className="teacher-queue-item-top">
-                    <div>
-                      <h4>{answer.question_title}</h4>
-                      <p>
-                        {answer.student_username} · Answer #{answer.id}
-                      </p>
-                    </div>
-                    <span className="score-badge score-badge--orange">
-                      AI {answer.ai_score_percent ?? 0}%
-                    </span>
-                  </div>
-                  <p className="teacher-queue-preview">
-                    {answer.answer_text?.slice(0, 220)}
-                    {answer.answer_text?.length > 220 ? "..." : ""}
-                  </p>
-                  <div className="teacher-queue-actions">
-                    <Link to={`/teacher/review/${answer.id}`} className="btn">
-                      Review
-                    </Link>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
+          <div className="teacher-workflow-grid">
+            <article className="teacher-workflow-card">
+              <strong>1) Start with queue</strong>
+              <p>Review all pending answers from one dedicated page.</p>
+              <Link to="/teacher/review-queue" className="btn btn--secondary">
+                Go to Queue
+              </Link>
+            </article>
+            <article className="teacher-workflow-card">
+              <strong>2) Create better questions</strong>
+              <p>Use AI draft and refine rubric-aligned reference answers.</p>
+              <Link to="/teacher/create-question" className="btn btn--secondary">
+                Create Question
+              </Link>
+            </article>
+            <article className="teacher-workflow-card">
+              <strong>3) Monitor outcomes</strong>
+              <p>Track reviewed vs pending and identify weak topics quickly.</p>
+              <Link to="/teacher/analytics" className="btn btn--secondary">
+                Open Analytics
+              </Link>
+            </article>
+          </div>
         </section>
       </div>
     </div>

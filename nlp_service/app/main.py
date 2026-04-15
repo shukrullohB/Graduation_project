@@ -139,38 +139,77 @@ def _topic_keywords(topic: str) -> list[str]:
 
 
 def _build_prompt(topic: str, difficulty: str, keywords: list[str]) -> str:
+	required_points = "; ".join(keywords)
+	word_range = {
+		"easy": "80-120",
+		"intermediate": "130-180",
+		"hard": "180-260",
+	}.get(difficulty, "120-180")
+
 	if difficulty == "easy":
 		return (
-			f"Explain the topic '{topic}' in simple terms. Use 2 short paragraphs and "
-			"include one practical example. Make sure your answer mentions: "
-			f"{', '.join(keywords)}."
+			f"In your own words, explain '{topic}' for a beginner. "
+			f"Write {word_range} words in 2 short paragraphs and include one simple real-life example. "
+			f"Your answer must address: {required_points}."
 		)
 	if difficulty == "hard":
 		return (
-			f"Analyze '{topic}' in depth. Compare at least 2 approaches, discuss trade-offs, "
-			"and justify your recommendation with clear reasoning. Ensure your answer covers: "
-			f"{', '.join(keywords)}."
+			f"Critically analyze '{topic}'. Compare at least two approaches, discuss trade-offs, "
+			f"and justify your conclusion with evidence. Recommended length: {word_range} words. "
+			f"Required coverage: {required_points}."
 		)
 	return (
-		f"Describe '{topic}' clearly. Structure your response with definition, key ideas, "
-		"and one real-world example. Ensure the answer addresses: "
-		f"{', '.join(keywords)}."
+		f"Describe '{topic}' with clear structure: definition, key mechanism(s), and one practical scenario. "
+		f"Write approximately {word_range} words and keep your explanation logically organized. "
+		f"Your response must include: {required_points}."
 	)
 
 
 def _build_reference_answer(topic: str, difficulty: str, keywords: list[str]) -> str:
-	base = [
-		f"{topic} can be defined clearly with accurate terminology.",
-		f"Key ideas include {', '.join(keywords)} and how they interact.",
-		"A practical example demonstrates application in a realistic scenario.",
-	]
-	if difficulty == "hard":
-		base.append("The answer compares alternatives and explains trade-offs with justification.")
-	elif difficulty == "easy":
-		base.append("The explanation is concise, beginner-friendly, and avoids unnecessary jargon.")
-	else:
-		base.append("The explanation balances conceptual clarity with practical understanding.")
-	return " ".join(base)
+	key_points = "\n".join(
+		[f"- Covers {point} with correct explanation." for point in keywords]
+	)
+
+	quality_line = {
+		"easy": "Uses simple wording and a beginner-friendly example.",
+		"intermediate": "Balances conceptual clarity with practical context.",
+		"hard": "Includes comparison, trade-offs, and justified conclusion.",
+	}.get(difficulty, "Maintains clear structure and accurate terminology.")
+
+	return (
+		f"Ideal answer guide for '{topic}':\n"
+		"1) Definition: Correctly defines the concept using proper terms.\n"
+		f"2) Core points:\n{key_points}\n"
+		"3) Application: Provides one concrete real-world example.\n"
+		f"4) Quality expectation: {quality_line}"
+	)
+
+
+def _build_title(topic: str, difficulty: str, keywords: list[str]) -> str:
+	clean_topic = topic.strip().rstrip("?.!")
+	anchor = keywords[0] if keywords else clean_topic
+
+	templates = {
+		"easy": [
+			f"Foundations of {clean_topic}",
+			f"Introduction to {clean_topic}",
+			f"{clean_topic}: Core Concepts",
+		],
+		"intermediate": [
+			f"{clean_topic}: Practical Analysis",
+			f"Applying {clean_topic} in Real Scenarios",
+			f"{clean_topic}: Concept to Application",
+		],
+		"hard": [
+			f"Advanced Evaluation of {clean_topic}",
+			f"{clean_topic}: Comparative Reasoning Task",
+			f"Critical Analysis of {anchor}",
+		],
+	}
+
+	pool = templates.get(difficulty, templates["intermediate"])
+	index = sum(ord(ch) for ch in clean_topic.lower()) % len(pool)
+	return pool[index]
 
 @app.get("/health")
 def health():
@@ -218,7 +257,7 @@ def generate_question(request: GenerateQuestionRequest):
 	difficulty = _normalize_difficulty(request.difficulty)
 	keywords = _topic_keywords(topic)
 
-	title = (request.title_hint or "").strip() or f"{topic}: Applied Understanding"
+	title = (request.title_hint or "").strip() or _build_title(topic, difficulty, keywords)
 	prompt = _build_prompt(topic, difficulty, keywords)
 	reference_answer = _build_reference_answer(topic, difficulty, keywords)
 
