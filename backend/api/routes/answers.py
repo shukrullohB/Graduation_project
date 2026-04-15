@@ -25,7 +25,11 @@ async def submit_answer(
 	ai_score: float | None = None
 	ai_feedback: str | None = None
 	try:
-		ai_score, ai_feedback = await score_answer(payload.question_id, payload.answer_text)
+		ai_score, ai_feedback = await score_answer(
+			payload.question_id,
+			payload.answer_text,
+			question.reference_answer,
+		)
 	except ScoringError:
 		pass
 

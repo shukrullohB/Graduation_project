@@ -1,5 +1,6 @@
 import csv
 import logging
+import re
 from functools import lru_cache
 from pathlib import Path
 
@@ -76,6 +77,23 @@ def get_scorer() -> tuple[str, object]:
 	return "sbert", SBERTScorer()
 
 
+@lru_cache(maxsize=1)
+def get_reference_scorer() -> SBERTScorer:
+	"""Scorer that compares student answer to a reference answer."""
+	logger.info("loading reference scorer (sbert)")
+	return SBERTScorer()
+
+
+def _clamp01(value: float) -> float:
+	return max(0.0, min(1.0, float(value)))
+
+
+def _normalize_bert_score(raw_score: float) -> float:
+	if RUBRIC_MAX_SCORE <= 0:
+		return 0.0
+	return _clamp01(raw_score / RUBRIC_MAX_SCORE)
+
+
 class ScoringRequest(BaseModel):
 	question_id: int = Field(gt=0)
 	answer_text: str = Field(min_length=1)
@@ -85,6 +103,75 @@ class ScoringResponse(BaseModel):
 	score: float
 	feedback: str
 
+
+class GenerateQuestionRequest(BaseModel):
+	topic: str = Field(min_length=3, max_length=180)
+	difficulty: str = Field(default="intermediate", min_length=3, max_length=32)
+	max_score: int = Field(default=5, ge=1, le=10)
+	title_hint: str | None = Field(default=None, max_length=255)
+
+
+class GenerateQuestionResponse(BaseModel):
+	title: str
+	prompt: str
+	reference_answer: str
+	max_score: int = Field(ge=1, le=10)
+
+
+def _normalize_difficulty(raw: str) -> str:
+	raw_value = (raw or "").strip().lower()
+	if raw_value in {"easy", "beginner", "basic"}:
+		return "easy"
+	if raw_value in {"hard", "advanced", "expert"}:
+		return "hard"
+	return "intermediate"
+
+
+def _topic_keywords(topic: str) -> list[str]:
+	parts = re.split(r"[,;/|]", topic)
+	keywords = [p.strip() for p in parts if p.strip()]
+	if keywords:
+		return keywords[:3]
+	words = [w for w in re.split(r"\s+", topic.strip()) if w]
+	if not words:
+		return ["main concept"]
+	return [" ".join(words[:2])]
+
+
+def _build_prompt(topic: str, difficulty: str, keywords: list[str]) -> str:
+	if difficulty == "easy":
+		return (
+			f"Explain the topic '{topic}' in simple terms. Use 2 short paragraphs and "
+			"include one practical example. Make sure your answer mentions: "
+			f"{', '.join(keywords)}."
+		)
+	if difficulty == "hard":
+		return (
+			f"Analyze '{topic}' in depth. Compare at least 2 approaches, discuss trade-offs, "
+			"and justify your recommendation with clear reasoning. Ensure your answer covers: "
+			f"{', '.join(keywords)}."
+		)
+	return (
+		f"Describe '{topic}' clearly. Structure your response with definition, key ideas, "
+		"and one real-world example. Ensure the answer addresses: "
+		f"{', '.join(keywords)}."
+	)
+
+
+def _build_reference_answer(topic: str, difficulty: str, keywords: list[str]) -> str:
+	base = [
+		f"{topic} can be defined clearly with accurate terminology.",
+		f"Key ideas include {', '.join(keywords)} and how they interact.",
+		"A practical example demonstrates application in a realistic scenario.",
+	]
+	if difficulty == "hard":
+		base.append("The answer compares alternatives and explains trade-offs with justification.")
+	elif difficulty == "easy":
+		base.append("The explanation is concise, beginner-friendly, and avoids unnecessary jargon.")
+	else:
+		base.append("The explanation balances conceptual clarity with practical understanding.")
+	return " ".join(base)
+
 @app.get("/health")
 def health():
 	model_type, _ = get_scorer()
@@ -93,19 +180,51 @@ def health():
 @app.post("/score", response_model=ScoringResponse)
 def score_answer(request: ScoringRequest):
 	model_type, scorer = get_scorer()
+	reference = request.reference_answer or REFERENCE_ANSWERS.get(request.question_id)
 
-	if model_type == "bert":
-		score = scorer.score(request.answer_text)
-		feedback = generate_feedback(score, max_score=RUBRIC_MAX_SCORE)
+	# Preferred path: score against the reference answer.
+	# This prevents low/irrelevant scores when the model sees only student text.
+	if reference:
+		if model_type == "bert":
+			bert_raw = scorer.score(request.answer_text)
+			bert_norm = _normalize_bert_score(bert_raw)
+
+			reference_scorer = get_reference_scorer()
+			sbert_raw = reference_scorer.score(request.answer_text, reference)
+			sbert_norm = _clamp01(sbert_raw)
+
+			# Heavier weight on semantic match to reference.
+			score = (0.7 * sbert_norm) + (0.3 * bert_norm)
+		else:
+			score = _clamp01(scorer.score(request.answer_text, reference))
+
+		feedback = generate_feedback(score, max_score=1.0)
 		return {"score": float(score), "feedback": feedback}
 
-	reference = request.reference_answer or REFERENCE_ANSWERS.get(request.question_id)
-	if not reference:
-		return {
-			"score": 0.0,
-			"feedback": "Reference answer unavailable for this question.",
-		}
+	if model_type == "bert":
+		score = _normalize_bert_score(scorer.score(request.answer_text))
+		feedback = generate_feedback(score, max_score=1.0)
+		return {"score": float(score), "feedback": feedback}
 
-	score = scorer.score(request.answer_text, reference)
-	feedback = generate_feedback(score, max_score=1.0)
-	return {"score": float(score), "feedback": feedback}
+	return {
+		"score": 0.0,
+		"feedback": "Reference answer unavailable for this question.",
+	}
+
+
+@app.post("/generate-question", response_model=GenerateQuestionResponse)
+def generate_question(request: GenerateQuestionRequest):
+	topic = request.topic.strip()
+	difficulty = _normalize_difficulty(request.difficulty)
+	keywords = _topic_keywords(topic)
+
+	title = (request.title_hint or "").strip() or f"{topic}: Applied Understanding"
+	prompt = _build_prompt(topic, difficulty, keywords)
+	reference_answer = _build_reference_answer(topic, difficulty, keywords)
+
+	return {
+		"title": title,
+		"prompt": prompt,
+		"reference_answer": reference_answer,
+		"max_score": request.max_score,
+	}

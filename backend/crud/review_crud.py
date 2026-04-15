@@ -13,7 +13,7 @@ def list_pending_reviews(db: Session, limit: int = 50) -> list[Answer]:
 	stmt = (
 		select(Answer)
 		.where(Answer.status == AnswerStatus.submitted)
-		.order_by(Answer.created_at.asc())
+		.order_by(Answer.created_at.desc())
 		.limit(limit)
 	)
 	return list(db.scalars(stmt).all())

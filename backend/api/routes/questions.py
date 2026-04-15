@@ -5,7 +5,13 @@ from api.deps import require_teacher
 from app.core.database import get_db
 from crud.question_crud import create_question, get_question_by_id, list_questions
 from models.user import User
-from schemas.question import QuestionCreate, QuestionPublic
+from schemas.question import (
+	QuestionAISuggestRequest,
+	QuestionAISuggestResponse,
+	QuestionCreate,
+	QuestionPublic,
+)
+from services.question_ai_client import QuestionAIError, suggest_question_draft
 
 router = APIRouter(prefix="/questions", tags=["questions"])
 
@@ -17,6 +23,20 @@ def create_question_endpoint(
 	teacher: User = Depends(require_teacher),
 ) -> QuestionPublic:
 	return create_question(db, payload, teacher.id)
+
+
+@router.post("/ai-suggest", response_model=QuestionAISuggestResponse)
+async def suggest_question_endpoint(
+	payload: QuestionAISuggestRequest,
+	_: User = Depends(require_teacher),
+) -> QuestionAISuggestResponse:
+	try:
+		return await suggest_question_draft(payload)
+	except QuestionAIError:
+		raise HTTPException(
+			status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+			detail="AI assistant is temporarily unavailable",
+		)
 
 
 @router.get("", response_model=list[QuestionPublic])

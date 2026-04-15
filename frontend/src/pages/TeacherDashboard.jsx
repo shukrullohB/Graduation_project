@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { getTeacherAnalytics } from "../api/analytics.api";
 import { getPendingAnswers } from "../api/review.api";
@@ -11,7 +11,6 @@ export default function TeacherDashboard() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [isDark, setIsDark] = useState(false);
-  const queueSectionRef = useRef(null);
 
   const { data: pending, isLoading, refetch } = useQuery({
     queryKey: ["pendingAnswers"],
@@ -73,10 +72,6 @@ export default function TeacherDashboard() {
     navigate("/login");
   };
 
-  const scrollToQueue = () => {
-    queueSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   const initials = user?.username?.slice(0, 2).toUpperCase() ?? "TE";
 
   return (
@@ -95,17 +90,10 @@ export default function TeacherDashboard() {
             <span className="teacher-left-nav-dot" />
             <span>Dashboard</span>
           </NavLink>
-          <button
-            type="button"
-            className="teacher-left-nav-item"
-            onClick={() => {
-              setQuery("");
-              scrollToQueue();
-            }}
-          >
+          <NavLink to="/teacher/review-queue" className="teacher-left-nav-item">
             <span className="teacher-left-nav-dot" />
             <span>Review Queue</span>
-          </button>
+          </NavLink>
           <NavLink to="/teacher/create-question" className="teacher-left-nav-item">
             <span className="teacher-left-nav-dot" />
             <span>Create Question</span>
@@ -123,10 +111,10 @@ export default function TeacherDashboard() {
               <span>Next Review</span>
             </Link>
           ) : (
-            <button type="button" className="teacher-left-nav-item" disabled>
+            <NavLink to="/teacher/review-queue" className="teacher-left-nav-item is-muted">
               <span className="teacher-left-nav-dot" />
-              <span>Next Review</span>
-            </button>
+              <span>No Pending Review</span>
+            </NavLink>
           )}
         </nav>
 
@@ -213,7 +201,7 @@ export default function TeacherDashboard() {
           </button>
         </section>
 
-        <section className="teacher-panel teacher-panel--queue" id="review-queue" ref={queueSectionRef}>
+        <section className="teacher-panel teacher-panel--queue" id="review-queue">
           <div className="teacher-panel-head">
             <h2>Pending Reviews</h2>
             <span className="badge badge--pending">{filteredQueue.length} pending</span>

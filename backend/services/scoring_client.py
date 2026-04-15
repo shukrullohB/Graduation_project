@@ -8,14 +8,22 @@ logger = logging.getLogger("app.scoring")
 class ScoringError(Exception):
 	pass
 
-async def score_answer(question_id: int, answer_text: str) -> tuple[float, str]:
+async def score_answer(
+	question_id: int,
+	answer_text: str,
+	reference_answer: str | None = None,
+) -> tuple[float, str]:
 	"""
 	Call NLP service to get AI score and feedback for a student's answer.
 	Returns (score, feedback).
 	Raises ScoringError on failure.
 	"""
 	url = f"{settings.nlp_service_base_url}/score"
-	payload = {"question_id": question_id, "answer_text": answer_text}
+	payload = {
+		"question_id": question_id,
+		"answer_text": answer_text,
+		"reference_answer": reference_answer,
+	}
 	try:
 		async with httpx.AsyncClient(timeout=10) as client:
 			resp = await client.post(url, json=payload)
