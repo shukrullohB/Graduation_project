@@ -32,35 +32,29 @@ export default function AnswerSubmitPage() {
 
   if (isLoading) return <p>Loading...</p>;
 
+  const currentLength = answerText.trim().length;
+
   return (
-    <div className="page">
+    <div className="page answer-submit-page">
       <div className="page-header">
         <div>
           <h2>{question?.title}</h2>
           <p className="page-subtitle">Write your answer below</p>
         </div>
       </div>
-      <div className="card" style={{ marginBottom: "1.25rem" }}>
-        <div className="review-box-label" style={{ marginBottom: "0.5rem" }}>
-          📖 Question
-        </div>
-        <p style={{ color: "var(--gray-700)", lineHeight: "1.7" }}>
-          {question?.description}
+
+      <div className="card answer-submit-card">
+        <div className="review-box-label answer-submit-label">📖 Question</div>
+        <p className="question-detail-text">
+          {question?.description || question?.prompt}
         </p>
+        <div className="answer-submit-meta">
+          <span>Question ID: #{question?.id}</span>
+          <span>Max score: {question?.max_score}</span>
+        </div>
       </div>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          borderRadius: "var(--radius-lg)",
-          padding: "1.5rem",
-          boxShadow: "var(--shadow-sm)",
-        }}
-      >
+
+      <form onSubmit={handleSubmit} className="answer-submit-form">
         {error && <p className="error-msg">{error}</p>}
         <div className="form-group">
           <label className="form-label">Your Answer</label>
@@ -71,6 +65,14 @@ export default function AnswerSubmitPage() {
             onChange={(e) => setAnswerText(e.target.value)}
             required
           />
+        </div>
+        <div className="answer-submit-meta">
+          <span>Characters: {currentLength}</span>
+          <span>
+            {currentLength < 40
+              ? "Try adding more detail"
+              : "Good detail level"}
+          </span>
         </div>
         <div className="form-actions">
           <button type="submit" disabled={submitting}>

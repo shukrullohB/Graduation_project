@@ -12,16 +12,19 @@ export default function QuestionPage() {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className="page">
+    <div className="page question-detail-page">
       <div className="card">
         <div className="card-header">
           <div>
             <div className="card-title">{question?.title}</div>
             <div className="card-subtitle">Question Detail</div>
           </div>
+          <span className="badge badge--pending">
+            Max Score: {question?.max_score}
+          </span>
         </div>
-        <p style={{ lineHeight: "1.7", color: "var(--gray-700)" }}>
-          {question?.description}
+        <p className="question-detail-text">
+          {question?.description || question?.prompt}
         </p>
       </div>
     </div>
