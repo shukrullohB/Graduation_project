@@ -26,6 +26,21 @@ export default {
           400: "#22d3ee",
           500: "#06b6d4",
         },
+        mint: {
+          DEFAULT: "#4FFFB0",
+          dark: "#00E87A",
+          light: "#AAFFD8",
+        },
+        plum: {
+          DEFAULT: "#3D1A4E",
+          dark: "#1A0A2E",
+          light: "#6B3A8A",
+        },
+        surface: {
+          light: "#F0FFF8",
+          white: "#FFFFFF",
+          muted: "#A78BBF",
+        },
       },
       boxShadow: {
         glow: "0 20px 40px rgba(79, 124, 255, 0.28)",

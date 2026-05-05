@@ -11,20 +11,42 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const savedUserRaw = localStorage.getItem("auth_user");
+    let savedUser = null;
+
+    try {
+      savedUser = savedUserRaw ? JSON.parse(savedUserRaw) : null;
+    } catch {
+      localStorage.removeItem("auth_user");
+    }
+
+    if (savedUser) {
+      setUser(savedUser);
+    }
+
     if (token) {
       try {
         const decoded = jwtDecode(token);
         if (decoded.exp * 1000 > Date.now()) {
           getMe()
-            .then((res) => setUser(res.data))
-            .catch(() => localStorage.removeItem("token"))
+            .then((res) => {
+              setUser(res.data);
+              localStorage.setItem("auth_user", JSON.stringify(res.data));
+            })
+            .catch(() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("auth_user");
+              setUser(null);
+            })
             .finally(() => setLoading(false));
         } else {
           localStorage.removeItem("token");
+          localStorage.removeItem("auth_user");
           setLoading(false);
         }
       } catch {
         localStorage.removeItem("token");
+        localStorage.removeItem("auth_user");
         setLoading(false);
       }
     } else {
@@ -33,16 +55,18 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = (token, userData) => {
-    if (DEMO_MODE) {
-      setUser(userData);
-      return;
-    }
     localStorage.setItem("token", token);
+    localStorage.setItem("auth_user", JSON.stringify(userData));
+    if (DEMO_MODE && userData?.email) {
+      localStorage.setItem("demo_user_email", userData.email);
+    }
     setUser(userData);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("auth_user");
+    localStorage.removeItem("demo_user_email");
     setUser(null);
   };
 

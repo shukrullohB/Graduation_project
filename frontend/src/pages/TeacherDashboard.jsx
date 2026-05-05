@@ -1,138 +1,159 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { getPendingAnswers } from "../api/review.api";
-import LoadingSpinner from "../components/LoadingSpinner";
 import PageTransition from "../components/ui/PageTransition";
 import GlassPanel from "../components/ui/GlassPanel";
-import MetricCard from "../components/ui/MetricCard";
-import InteractiveTilt from "../components/ui/InteractiveTilt";
 
 export default function TeacherDashboard() {
-  const { data: pending, isLoading } = useQuery({
-    queryKey: ["pendingAnswers"],
-    queryFn: () => getPendingAnswers().then((r) => r.data),
+  const { data: pending } = useQuery({
+    queryKey: ["pending-answers"],
+    queryFn: getPendingAnswers,
   });
 
-  if (isLoading) return <LoadingSpinner text="Syncing pending reviews..." />;
-
-  const pendingCount = pending?.length ?? 0;
-  const uniqueStudents = new Set((pending || []).map((a) => a.student_id)).size;
+  const pendingList = Array.isArray(pending) ? pending : [];
+  const pendingCount = pendingList.length;
+  const uniqueStudents = new Set(pendingList.map((a) => a.student_id)).size;
   const avgAnswerSize = pendingCount
     ? Math.round(
-        pending.reduce(
+        pendingList.reduce(
           (sum, item) => sum + (item.answer_text?.length || 0),
           0,
         ) / pendingCount,
       )
     : 0;
 
+  const metrics = [
+    {
+      label: "Answers in queue",
+      value: pendingCount,
+      note: "Need final teacher approval",
+    },
+    {
+      label: "Students waiting",
+      value: uniqueStudents,
+      note: "Unique learners awaiting feedback",
+    },
+    {
+      label: "Average answer length",
+      value: `${avgAnswerSize} ch`,
+      note: "Useful for estimating review effort",
+    },
+  ];
+
   return (
-    <PageTransition className="stage-spotlight space-y-4">
-      <GlassPanel className="stage-spotlight overflow-hidden p-6 md:p-7">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300">
+    <PageTransition className="space-y-6">
+      <GlassPanel className="relative overflow-hidden p-6 md:p-8">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.24),transparent_34%),linear-gradient(145deg,rgba(0,71,255,0.96),rgba(26,88,255,0.92))]" />
+        <div className="relative flex flex-wrap items-end justify-between gap-5">
+          <div className="max-w-3xl">
+            <p className="text-[11px] uppercase tracking-[0.3em] text-white/78">
               Teacher Analytics
             </p>
-            <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 md:text-4xl">
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#FFF8E7] md:text-4xl">
               Grading Command Center
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-              Prioritize pending answers, apply AI recommendations faster, and
-              close the loop with consistent final scoring.
+            </h2>
+            <p
+              className="mt-4 max-w-2xl text-sm leading-7 md:text-base"
+              style={{ color: "rgba(255, 248, 231, 0.92)" }}
+            >
+              Prioritize pending answers, keep review flow consistent, and move from AI suggestion to final teacher scoring faster.
             </p>
           </div>
-          <div className="rounded-2xl border border-amber-300/45 bg-amber-100/70 px-4 py-2 text-sm font-medium text-amber-900 dark:border-amber-300/20 dark:bg-amber-300/10 dark:text-amber-100">
-            {pendingCount} pending review{pendingCount === 1 ? "" : "s"}
+
+          <div className="rounded-[28px] border border-white/18 bg-white/14 p-4 text-sm text-white/80">
+            <p className="text-[11px] uppercase tracking-[0.24em] text-white/72">
+              Queue status
+            </p>
+            <p className="mt-2 text-2xl font-semibold text-[#FFF8E7]">
+              {pendingCount} pending
+            </p>
           </div>
         </div>
       </GlassPanel>
 
-      <section className="grid gap-3 md:grid-cols-3">
-        <MetricCard
-          icon="📝"
-          label="Answers in Queue"
-          value={pendingCount}
-          trend="Needs teacher approval"
-          tone="brand"
-        />
-        <MetricCard
-          icon="👥"
-          label="Students Waiting"
-          value={uniqueStudents}
-          trend="Unique learners"
-          tone="mint"
-        />
-        <MetricCard
-          icon="⏱"
-          label="Avg. Answer Length"
-          value={`${avgAnswerSize} ch`}
-          trend="Helps estimate review time"
-          tone="violet"
-        />
+      <section className="grid gap-4 md:grid-cols-3">
+        {metrics.map((metric) => (
+          <GlassPanel key={metric.label} className="relative overflow-hidden p-5">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,71,255,0.08),transparent_34%)]" />
+            <div className="relative">
+              <p className="text-[11px] uppercase tracking-[0.24em] text-[#6F7F9D]">
+                {metric.label}
+              </p>
+              <p className="mt-4 text-4xl font-semibold tracking-tight text-[#16305F]">
+                {metric.value}
+              </p>
+              <p className="mt-4 text-sm leading-6 text-[#556581]">{metric.note}</p>
+            </div>
+          </GlassPanel>
+        ))}
       </section>
 
-      <GlassPanel className="p-4 md:p-5">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-display text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-            Review Queue
-          </h2>
-          <p className="text-xs uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">
+      <GlassPanel className="p-5 md:p-6">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.24em] text-[#0047FF]/72">
+              Review Queue
+            </p>
+            <h3 className="mt-2 text-xl font-semibold text-[#16305F]">
+              Latest submissions needing review
+            </h3>
+          </div>
+          <span className="rounded-full border border-[#0047FF]/12 bg-[#FFF8E7] px-3 py-1 text-xs uppercase tracking-[0.2em] text-[#6F7F9D]">
             Sorted by latest submissions
-          </p>
+          </span>
         </div>
 
-        {pending?.length === 0 && (
-          <div className="grid place-items-center rounded-2xl border border-dashed border-slate-300/60 bg-white/45 px-6 py-14 text-center dark:border-slate-500/35 dark:bg-slate-900/25">
-            <div className="space-y-2">
-              <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-emerald-100 text-xl dark:bg-emerald-300/20">
-                ✅
+        {pendingCount === 0 ? (
+          <div className="grid place-items-center rounded-[28px] border border-[#0047FF]/12 bg-[#FFF8E7] px-6 py-14 text-center">
+            <div className="max-w-md">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border border-[#0047FF]/18 bg-[#0047FF]/10 text-xl text-[#0047FF]">
+                ✓
               </div>
-              <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
+              <p className="mt-5 text-lg font-semibold text-[#16305F]">
                 All clear, no pending reviews.
               </p>
-              <p className="text-sm text-slate-500 dark:text-slate-300">
+              <p className="mt-2 text-sm leading-6 text-[#556581]">
                 Your grading queue is fully up to date.
               </p>
             </div>
           </div>
-        )}
+        ) : (
+          <div className="grid gap-3">
+            {pendingList.map((answer) => (
+              <div
+                key={answer.id}
+                className="rounded-[28px] border border-[#0047FF]/12 bg-white/92 p-5 transition duration-150 hover:border-[#0047FF]/22 hover:bg-white"
+              >
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-3 flex flex-wrap items-center gap-3">
+                      <span className="rounded-full border border-[#0047FF]/18 bg-[#0047FF]/10 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-[#0047FF]">
+                        Pending
+                      </span>
+                      <span className="text-sm text-[#6F7F9D]">
+                        {answer.student_username}
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-[#16305F]">
+                      {answer.question_title}
+                    </h4>
+                    <p className="mt-2 text-sm leading-6 text-[#556581]">
+                      {answer.answer_text?.slice(0, 220)}
+                      {answer.answer_text?.length > 220 ? "..." : ""}
+                    </p>
+                  </div>
 
-        <div className="space-y-3">
-          {pending?.map((answer, index) => (
-            <InteractiveTilt
-              key={answer.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25, delay: index * 0.03 }}
-              whileHover={{ y: -4 }}
-              className="control-module p-4"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-300">
-                  <span className="rounded-full bg-amber-100 px-2 py-1 font-medium text-amber-900 dark:bg-amber-300/20 dark:text-amber-100">
-                    Pending
-                  </span>
-                  <span>{answer.student_username}</span>
+                  <Link
+                    to={`/teacher/review/${answer.id}`}
+                    className="btn-premium min-w-[170px] justify-center"
+                  >
+                    Review Answer
+                  </Link>
                 </div>
-                <Link
-                  to={`/teacher/review/${answer.id}`}
-                  className="btn-premium px-4 py-2 text-xs"
-                >
-                  Open Review
-                </Link>
               </div>
-              <h3 className="mt-3 text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-                {answer.question_title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                {answer.answer_text?.slice(0, 180)}
-                {answer.answer_text?.length > 180 ? "..." : ""}
-              </p>
-            </InteractiveTilt>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </GlassPanel>
     </PageTransition>
   );

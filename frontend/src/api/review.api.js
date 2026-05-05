@@ -2,7 +2,7 @@ import http from "./http";
 import { DEMO_MODE, mockPendingAnswers } from "./mockData";
 
 export const getPendingAnswers = async () => {
-  if (DEMO_MODE) return Promise.resolve({ data: mockPendingAnswers });
+  if (DEMO_MODE) return Promise.resolve(mockPendingAnswers);
 
   const [pendingRes, questionsRes] = await Promise.all([
     http.get("/reviews/pending"),
@@ -13,8 +13,7 @@ export const getPendingAnswers = async () => {
     (questionsRes.data || []).map((q) => [q.id, q]),
   );
 
-  return {
-    data: (pendingRes.data || []).map((a) => ({
+  return (pendingRes.data || []).map((a) => ({
       ...a,
       question_title:
         questionMap[a.question_id]?.title ?? `Question #${a.question_id}`,
@@ -25,8 +24,7 @@ export const getPendingAnswers = async () => {
       student_username: a.student_username ?? `Student #${a.student_id}`,
       score: a.teacher_score,
       feedback: a.teacher_feedback,
-    })),
-  };
+    }));
 };
 
 export const submitReview = (answerId, data) => {

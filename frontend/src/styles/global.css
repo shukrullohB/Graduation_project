@@ -1,72 +1,3 @@
-﻿/* ================================================
-   ASAG — Premium Design System
-   ================================================ */
-
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap");
-
-/* ---- Design Tokens ---- */
-:root {
-  /* Brand colors */
-  --primary: #0f62fe;
-  --primary-dark: #0047d1;
-  --primary-light: #e8f0ff;
-  --accent: #0ea5a8;
-  --accent-light: #e6fbfc;
-
-  /* Semantic */
-  --success: #10b981;
-  --success-bg: #d1fae5;
-  --warning: #f59e0b;
-  --warning-bg: #fef3c7;
-  --danger: #ef4444;
-  --danger-bg: #fee2e2;
-  --info: #3b82f6;
-  --info-bg: #dbeafe;
-
-  /* Neutral */
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
-
-  /* Surface */
-  --surface: #ffffff;
-  --surface-raised: #ffffff;
-  --bg: #f3f6ff;
-  --border: #e5e7eb;
-  --border-focus: #4f6ef7;
-
-  /* Typography */
-  --font: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-display: "Sora", "Manrope", sans-serif;
-  --text-base: #1f2937;
-  --text-muted: #6b7280;
-  --text-subtle: #9ca3af;
-
-  /* Spacing */
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-
-  /* Shadow */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05);
-  --shadow-colored: 0 8px 24px rgba(79, 110, 247, 0.25);
-
-  /* Transition */
-  --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ---- Reset ---- */
 *,
 *::before,
 *::after {
@@ -75,97 +6,40 @@
   padding: 0;
 }
 
-html {
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-}
-
 body {
-  font-family: var(--font);
-  background:
-    radial-gradient(circle at 7% 8%, rgba(15, 98, 254, 0.12), transparent 33%),
-    radial-gradient(
-      circle at 96% 4%,
-      rgba(14, 165, 168, 0.12),
-      transparent 28%
-    ),
-    var(--bg);
-  color: var(--text-base);
-  line-height: 1.6;
+  background: #0A0A1A;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   min-height: 100vh;
-  overflow-x: hidden;
-}
-
-h1,
-h2,
-h3,
-h4,
-.page-title,
-.card-title {
-  font-family: var(--font-display);
 }
 
 a {
+  color: #0047FF;
   text-decoration: none;
-  color: inherit;
-}
-ul {
-  list-style: none;
 }
 
-/* ---- Layout ---- */
-.app-shell {
-  position: relative;
-  min-height: 100vh;
+button {
+  cursor: pointer;
+  font-family: inherit;
 }
 
-.app-glow {
-  position: fixed;
-  width: 420px;
-  height: 420px;
-  border-radius: 999px;
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(50px);
-  opacity: 0.28;
+input,
+select,
+textarea {
+  font-family: inherit;
 }
 
-.app-glow--one {
-  top: -220px;
-  right: -120px;
-  background: rgba(15, 98, 254, 0.5);
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-.app-glow--two {
-  bottom: -250px;
-  left: -160px;
-  background: rgba(14, 165, 168, 0.42);
+::-webkit-scrollbar-track {
+  background: #2a1040;
 }
 
-.main-content {
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 2.2rem 1.5rem;
-  position: relative;
-  z-index: 1;
-}
-
-.main-content--auth {
-  max-width: none;
-  margin: 0;
-  padding: 0;
-}
-
-.loading-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  gap: 1rem;
-  background: var(--bg);
-  color: var(--text-muted);
-  font-size: 1rem;
+::-webkit-scrollbar-thumb {
+  background: #0047FF;
+  border-radius: 3px;
 }
 
 /* ================================================
@@ -175,12 +49,10 @@ ul {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
-  height: 72px;
-  background: rgba(255, 255, 255, 0.86);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.96);
-  box-shadow: 0 10px 28px rgba(17, 24, 39, 0.08);
-  backdrop-filter: blur(14px);
+  padding: 0 1.25rem;
+  height: 64px;
+  background: #2a1040;
+  border-bottom: 1px solid rgba(0,71,255, 0.15);
   position: sticky;
   top: 0;
   z-index: 150;
@@ -201,19 +73,14 @@ ul {
   justify-content: center;
   font-size: 0.95rem;
   font-weight: 800;
-  color: #fff;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  box-shadow: 0 8px 20px rgba(15, 98, 254, 0.3);
+  color: var(--plum-dark);
+  background: var(--mint);
 }
 
 .navbar-brand-text {
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: -0.4px;
-  background: linear-gradient(135deg, #0636a3, #0b7490);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--white);
 }
 
 .navbar-links {
@@ -290,43 +157,27 @@ ul {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-}
-
-.btn-logout {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.45rem 0.9rem;
-  background: linear-gradient(135deg, #eef4ff, #e8f7ff);
-  border: 1px solid #c7dbff;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #0b4fdb;
-  cursor: pointer;
-  transition:
-    transform var(--transition),
-    box-shadow var(--transition),
-    border-color var(--transition),
-    filter var(--transition);
-  box-shadow: 0 8px 18px rgba(15, 98, 254, 0.16);
-  position: relative;
-  overflow: hidden;
-}
-.btn-logout:hover {
-  border-color: #9ec2ff;
-  box-shadow: 0 12px 22px rgba(15, 98, 254, 0.24);
-  transform: translateY(-1px);
-  filter: saturate(1.05);
-}
-
-.btn-logout::before {
-  content: "";
-  position: absolute;
-  inset: -120% 40% auto -60%;
-  width: 70%;
-  height: 220%;
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .navbar-links a {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .navbar-links a:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+  }
+  .navbar-links a.active {
+    background: rgba(0,71,255, 0.12);
+    color: var(--mint);
+    border-left: 3px solid var(--mint);
+  }
   background: linear-gradient(
     90deg,
     transparent,
@@ -1756,38 +1607,37 @@ select {
   .main-content {
     padding: 1rem;
   }
-  .navbar {
-    padding: 0 1rem;
-  }
   .navbar-user-info {
-    display: none;
-  }
-  .navbar-brand-mark {
-    width: 30px;
-    height: 30px;
-  }
-  .btn-logout span:last-child {
-    display: none;
-  }
-  .auth-card {
-    padding: 1.75rem 1.25rem;
-  }
-  .login-hero-stats {
-    grid-template-columns: 1fr;
-  }
-  .login-hero::before,
-  .login-hero::after {
-    display: none;
-  }
-  .auth-page--login::before,
-  .auth-page--login::after {
-    display: none;
-  }
-  .page-header {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
+    align-items: flex-end;
+    line-height: 1.2;
   }
+  .navbar-user-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .navbar-user-role {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: capitalize;
+  }
+
+  .navbar-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: var(--mint);
+    color: var(--plum-dark);
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -1814,107 +1664,64 @@ select {
    THEME OVERRIDES (Yellow / Ink)
    ================================================ */
 :root {
-  --primary: #f5cf00;
-  --primary-dark: #ddb900;
-  --primary-light: #fff6bf;
-  --accent: #1f2330;
-  --accent-light: #eef2ff;
-  --info: #334155;
-  --info-bg: #e2e8f0;
-  --bg: #f4f6fb;
-  --border: #dde2ef;
-  --border-focus: #1f2330;
-  --font:
-    "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  --font-display: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
-  --shadow-colored: 0 10px 24px rgba(245, 207, 0, 0.38);
-}
+  .btn-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .btn-logout:hover {
+    color: var(--white);
+  }
 
-body {
-  position: relative;
-  background:
-    radial-gradient(circle at 7% 8%, rgba(245, 207, 0, 0.24), transparent 33%),
-    radial-gradient(circle at 96% 4%, rgba(31, 35, 48, 0.12), transparent 28%),
-    var(--bg);
-}
+  .btn-logout-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--white);
+  }
+  rgba(31, 35, 48, 0.022) 1px,
+  .btn,
+  button[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 10px 16px;
+    background: var(--mint);
+    color: var(--plum-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--transition);
+  }
+  .btn:hover,
+  button[type="submit"]:hover {
+    background: var(--mint-dark);
+  }
+  .btn:disabled,
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  pointer-events: none;
-  z-index: -1;
-}
-
-body::before {
-  inset: 0;
-  background:
-    radial-gradient(
-      circle at 18% 24%,
-      rgba(255, 236, 130, 0.44),
-      transparent 34%
-    ),
-    radial-gradient(
-      circle at 86% 74%,
-      rgba(73, 81, 108, 0.17),
-      transparent 32%
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(31, 35, 48, 0.03) 0px,
-      rgba(31, 35, 48, 0.03) 1px,
-      transparent 1px,
-      transparent 48px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      rgba(31, 35, 48, 0.022) 0px,
-      rgba(31, 35, 48, 0.022) 1px,
-      transparent 1px,
-      transparent 48px
-    );
-  opacity: 0.45;
-}
-
-body::after {
-  width: min(42vw, 520px);
-  height: min(42vw, 520px);
-  right: -110px;
-  top: 64px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(245, 207, 0, 0.42),
-    rgba(245, 207, 0, 0) 68%
-  );
-  filter: blur(18px);
-  animation: driftOrb 18s ease-in-out infinite;
-}
-
-.main-content:not(.main-content--auth) {
-  isolation: isolate;
-}
-
-.main-content:not(.main-content--auth)::before,
-.main-content:not(.main-content--auth)::after {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.main-content:not(.main-content--auth)::before {
-  top: 10px;
-  left: -120px;
-  width: 280px;
-  height: 280px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 230, 99, 0.55),
-    rgba(255, 230, 99, 0) 70%
-  );
+  .btn--secondary {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--white);
+    border: 1px solid rgba(0,71,255, 0.2);
+  }
   filter: blur(20px);
 }
 
@@ -2384,14 +2191,12 @@ body::before {
   top: 0;
   left: 0;
   bottom: 0;
-  width: var(--shell-w);
+  width: 240px; /* fixed */
   padding: 1rem 0.75rem 0.9rem;
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(14px);
-  border-right: 1px solid rgba(207, 214, 227, 0.9);
-  box-shadow: 8px 0 32px rgba(17, 24, 39, 0.08);
+  background: #2a1040;
+  border-right: 1px solid rgba(0,71,255, 0.15);
   transition: width 180ms ease;
 }
 
@@ -2417,20 +2222,19 @@ body::before {
 .sidebar-brand-mark {
   width: 34px;
   height: 34px;
-  border-radius: 11px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  color: #1a1a1a;
-  background: linear-gradient(135deg, #ffe878, #ffd60a);
-  box-shadow: 0 10px 20px rgba(255, 214, 10, 0.4);
+  color: var(--plum-dark);
+  background: var(--mint);
 }
 
 .sidebar-brand-text {
-  font-weight: 800;
-  font-size: 1.05rem;
-  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--white);
   letter-spacing: -0.02em;
 }
 
@@ -2467,12 +2271,11 @@ body::before {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.56rem 0.72rem;
-  border-radius: 12px;
-  color: #3a4258;
-  font-size: 0.88rem;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.95rem;
   font-weight: 600;
-  transition: all var(--transition);
 }
 
 .sidebar-link svg {
@@ -2481,41 +2284,35 @@ body::before {
 }
 
 .sidebar-link:hover {
-  background: rgba(255, 214, 10, 0.2);
-  color: #1d212b;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--white);
 }
-
 .sidebar-link.active {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 233, 108, 0.98),
-    rgba(255, 214, 10, 0.9)
-  );
-  color: #1a1a1a;
-  box-shadow: 0 8px 18px rgba(255, 214, 10, 0.28);
+  background: rgba(0,71,255, 0.12);
+  color: var(--mint);
+  border-left: 3px solid var(--mint);
 }
 
 .sidebar-footer-note {
   margin-top: auto;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 214, 10, 0.36);
-  background: linear-gradient(145deg, #fff8d7, #fff0ab);
-  padding: 0.7rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0,71,255, 0.2);
+  background: rgba(0,71,255, 0.08);
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 0.22rem;
+  gap: 0.25rem;
 }
 
 .sidebar-footer-note span {
-  font-size: 0.76rem;
-  font-weight: 800;
-  color: #3f3210;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--mint);
 }
-
 .sidebar-footer-note small {
-  font-size: 0.72rem;
-  color: #5d5a4d;
-  line-height: 1.35;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.3;
 }
 
 .app-shell-nav.is-collapsed .sidebar-brand-text,
@@ -3042,7 +2839,7 @@ body {
 }
 
 .sidebar-footer-note small {
-  color: #475569;
+  color: #C4B89A;
 }
 
 .topbar-quick-action,
@@ -3145,3 +2942,4 @@ button[type="submit"]:hover {
 .ai-helper-fab {
   display: none !important;
 }
+

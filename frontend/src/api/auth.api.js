@@ -3,6 +3,7 @@ import { DEMO_MODE, mockUser, mockTeacher } from "./mockData";
 
 const normalizeUser = (raw) => ({
   ...raw,
+  name: raw?.name ?? raw?.full_name ?? raw?.username ?? raw?.email ?? "User",
   username: raw?.username ?? raw?.full_name ?? raw?.email ?? "user",
 });
 
@@ -42,7 +43,14 @@ export const register = (data) => {
 };
 
 export const getMe = () => {
-  if (DEMO_MODE) return Promise.resolve({ data: normalizeUser(mockUser) });
+  if (DEMO_MODE) {
+    const storedEmail = localStorage.getItem("demo_user_email");
+    const demoUser =
+      storedEmail?.toLowerCase() === mockTeacher.email.toLowerCase()
+        ? mockTeacher
+        : mockUser;
+    return Promise.resolve({ data: normalizeUser(demoUser) });
+  }
   return http.get("/auth/me").then((res) => ({
     ...res,
     data: normalizeUser(res.data),

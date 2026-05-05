@@ -5,19 +5,19 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
-  --bg-deep: #020814;
-  --bg-mid: #05253f;
-  --bg-soft: #04152a;
-  --mint: #7fffd4;
-  --mint-soft: rgba(127, 255, 212, 0.34);
-  --text: #e8f9ff;
-  --muted: #91b9cc;
-  --line: rgba(113, 209, 240, 0.26);
-  --line-strong: rgba(146, 236, 255, 0.44);
-  --panel: rgba(7, 24, 44, 0.66);
-  --panel-strong: rgba(5, 18, 34, 0.84);
-  --ring: rgba(80, 232, 255, 0.44);
+  color-scheme: light;
+  --bg-deep: #fff8e7;
+  --bg-mid: #fff4d6;
+  --bg-soft: #ffffff;
+  --mint: #0047ff;
+  --mint-soft: rgba(0, 71, 255, 0.14);
+  --text: #16305f;
+  --muted: #6f7f9d;
+  --line: rgba(0, 71, 255, 0.14);
+  --line-strong: rgba(0, 71, 255, 0.22);
+  --panel: rgba(255, 255, 255, 0.84);
+  --panel-strong: rgba(255, 248, 231, 0.96);
+  --ring: rgba(0, 71, 255, 0.18);
 }
 
 :root.light {
@@ -35,9 +35,9 @@
     margin: 0;
     color: var(--text);
     background: linear-gradient(
-      140deg,
+      145deg,
       var(--bg-deep) 0%,
-      var(--bg-mid) 56%,
+      var(--bg-mid) 58%,
       var(--bg-soft) 100%
     );
     @apply antialiased font-sans;
@@ -553,8 +553,8 @@
     border: 1px solid var(--line);
     backdrop-filter: blur(20px);
     box-shadow:
-      0 20px 48px rgba(1, 6, 18, 0.5),
-      inset 0 1px 0 rgba(156, 184, 255, 0.18);
+      0 20px 50px rgba(0, 71, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.82);
     transition:
       border-color 180ms ease,
       transform 180ms ease,
@@ -565,27 +565,27 @@
   .glass-panel {
     background: linear-gradient(
       155deg,
-      rgba(10, 34, 56, 0.76) 0%,
-      rgba(8, 24, 44, 0.62) 100%
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 248, 231, 0.94) 100%
     );
   }
 
   .glass-panel-strong {
     background: linear-gradient(
       155deg,
-      rgba(8, 26, 44, 0.88) 0%,
-      rgba(6, 18, 32, 0.76) 100%
+      rgba(0, 71, 255, 0.98) 0%,
+      rgba(23, 95, 255, 0.94) 100%
     );
     border-color: var(--line-strong);
   }
 
   .glass-panel:hover,
   .glass-panel-strong:hover {
-    border-color: rgba(130, 242, 255, 0.54);
+    border-color: rgba(0, 71, 255, 0.32);
     box-shadow:
-      0 26px 56px rgba(0, 4, 14, 0.6),
-      0 0 0 1px rgba(118, 239, 255, 0.22),
-      inset 0 1px 0 rgba(172, 255, 247, 0.2);
+      0 24px 56px rgba(0, 71, 255, 0.12),
+      0 0 0 1px rgba(0, 71, 255, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.88);
   }
 
   .control-module {
@@ -614,8 +614,8 @@
     overflow: hidden;
     transform-style: preserve-3d;
     will-change: transform;
-    background: linear-gradient(135deg, #16c9ff 0%, #17e3c3 46%, #3f7bff 100%);
-    box-shadow: 0 14px 28px rgba(21, 142, 205, 0.36);
+    background: linear-gradient(135deg, #0047ff 0%, #1f5fff 100%);
+    box-shadow: 0 14px 28px rgba(0, 71, 255, 0.24);
     @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition duration-150;
   }
 
@@ -697,8 +697,8 @@
   .btn-premium:hover {
     @apply -translate-y-0.5;
     box-shadow:
-      0 18px 34px rgba(19, 181, 221, 0.42),
-      0 0 18px rgba(55, 237, 206, 0.32);
+      0 18px 34px rgba(0, 71, 255, 0.28),
+      0 0 18px rgba(0, 71, 255, 0.16);
   }
 
   .btn-premium:hover::before {
@@ -708,8 +708,8 @@
   .btn-premium:active {
     transform: translateY(1.5px) scale(0.992);
     box-shadow:
-      0 9px 20px rgba(19, 135, 186, 0.34),
-      0 0 10px rgba(55, 237, 206, 0.22);
+      0 9px 20px rgba(0, 71, 255, 0.22),
+      0 0 10px rgba(0, 71, 255, 0.12);
   }
 
   .btn-premium:active::after {
@@ -737,7 +737,7 @@
     transform-style: preserve-3d;
     will-change: transform;
     border: 1px solid var(--line);
-    background: rgba(10, 26, 44, 0.48);
+    background: rgba(255, 255, 255, 0.84);
     color: var(--text);
     @apply inline-flex items-center justify-center rounded-2xl px-4 py-2 text-sm font-semibold transition duration-150;
   }
@@ -758,9 +758,9 @@
   }
 
   .btn-ghost:hover {
-    border-color: rgba(129, 255, 236, 0.52);
-    background: rgba(11, 37, 61, 0.7);
-    box-shadow: 0 8px 20px rgba(17, 92, 113, 0.28);
+    border-color: rgba(0, 71, 255, 0.34);
+    background: rgba(255, 248, 231, 0.98);
+    box-shadow: 0 8px 20px rgba(0, 71, 255, 0.1);
   }
 
   .btn-ghost:active {
@@ -800,8 +800,8 @@
 
   .control-input,
   .control-textarea {
-    border: 1px solid rgba(119, 146, 197, 0.34);
-    background: rgba(7, 16, 32, 0.64);
+    border: 1px solid rgba(0, 71, 255, 0.16);
+    background: rgba(255, 255, 255, 0.92);
     color: var(--text);
     @apply rounded-2xl outline-none transition duration-200;
   }
@@ -816,7 +816,7 @@
 
   .control-input:focus,
   .control-textarea:focus {
-    border-color: rgba(121, 155, 237, 0.82);
+    border-color: rgba(0, 71, 255, 0.82);
     box-shadow: 0 0 0 4px var(--ring);
   }
 

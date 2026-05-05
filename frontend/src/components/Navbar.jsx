@@ -1,358 +1,175 @@
-import { useMemo, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useMotionIntensity } from "../context/MotionContext";
-import InteractiveTilt from "./ui/InteractiveTilt";
 
-function BrandIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
-      <path
-        d="M4 13.5 12 4l8 9.5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6.5 12.5V20h11v-7.5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <circle cx="12" cy="13" r="1.2" fill="currentColor" />
-    </svg>
-  );
-}
-
-function SideIcon({ d }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      className="h-[18px] w-[18px]"
-      aria-hidden="true"
-    >
-      <path
-        d={d}
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-const linkIcons = {
-  dashboard: "M4 13h7V4H4zM13 20h7v-9h-7zM13 11h7V4h-7zM4 20h7v-5H4z",
-  answers:
-    "M8 7h8M8 12h8M8 17h5M6 4h12a2 2 0 0 1 2 2v12l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2Z",
-  analytics: "M4 19h16M7 16v-4M12 16V8M17 16v-7",
-  create: "M12 5v14M5 12h14",
-};
-
-function MoonSunIcon({ dark }) {
-  if (dark) {
-    return (
-      <svg
-        viewBox="0 0 24 24"
-        className="h-[18px] w-[18px]"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 1 0 9.8 9.8Z"
-          stroke="currentColor"
-          strokeWidth="1.8"
-        />
-      </svg>
-    );
-  }
-
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[18px] w-[18px]"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8" />
-      <path
-        d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.2 2.2M16.9 16.9l2.2 2.2M4.9 19.1l2.2-2.2M16.9 7.1l2.2-2.2"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function MotionIcon({ mode }) {
-  if (mode === "calm") {
-    return (
-      <svg
-        viewBox="0 0 24 24"
-        className="h-[18px] w-[18px]"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M3 13c3.2 0 3.2-3.8 6.4-3.8S12.6 13 15.8 13s3.2-3.8 6.4-3.8"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
-
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[18px] w-[18px]"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M3 14c2.2 0 2.2-4.8 4.4-4.8S9.6 14 11.8 14s2.2-4.8 4.4-4.8S18.4 14 20.6 14"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <circle cx="3" cy="14" r="1" fill="currentColor" />
-      <circle cx="7.4" cy="9.2" r="1" fill="currentColor" />
-      <circle cx="11.8" cy="14" r="1" fill="currentColor" />
-      <circle cx="16.2" cy="9.2" r="1" fill="currentColor" />
-      <circle cx="20.6" cy="14" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-export default function Navbar() {
+export default function Navbar({ role }) {
   const { user, logout } = useAuth();
-  const { mode, toggleMode } = useMotionIntensity();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [dark, setDark] = useState(() =>
-    document.documentElement.classList.contains("dark"),
-  );
 
-  if (!user) return null;
+  const teacherLinks = [
+    {
+      to: "/teacher",
+      label: "Dashboard",
+      icon: "▦",
+      hint: "Queue and overview",
+      end: true,
+    },
+    {
+      to: "/teacher/create-question",
+      label: "Create",
+      icon: "+",
+      hint: "Design prompts",
+    },
+    {
+      to: "/teacher/analytics",
+      label: "Analytics",
+      icon: "◔",
+      hint: "Patterns and trends",
+    },
+  ];
 
-  const links = useMemo(() => {
-    if (user.role === "teacher") {
-      return [
-        { to: "/teacher", label: "Dashboard", icon: "dashboard", end: true },
-        { to: "/teacher/create-question", label: "Create", icon: "create" },
-        { to: "/teacher/analytics", label: "Analytics", icon: "analytics" },
-      ];
-    }
+  const studentLinks = [
+    {
+      to: "/student",
+      label: "Dashboard",
+      icon: "▦",
+      hint: "Progress overview",
+      end: true,
+    },
+    {
+      to: "/student/my-answers",
+      label: "My Answers",
+      icon: "✎",
+      hint: "Recent submissions",
+    },
+    {
+      to: "/student/analytics",
+      label: "Analytics",
+      icon: "◔",
+      hint: "Performance snapshots",
+    },
+  ];
 
-    return [
-      { to: "/student", label: "Dashboard", icon: "dashboard", end: true },
-      { to: "/student/my-answers", label: "My Answers", icon: "answers" },
-      { to: "/student/analytics", label: "Analytics", icon: "analytics" },
-    ];
-  }, [user.role]);
+  const links = role === "teacher" ? teacherLinks : studentLinks;
+  const pageTitle = role === "teacher" ? "Teaching Command" : "Learning Studio";
+  const pageLabel = role === "teacher" ? "Teacher Control" : "Student Portal";
+  const profileName = user?.name || user?.username || user?.email?.split("@")[0] || "User";
 
-  const initials = (user.username || user.email || "U")
-    .slice(0, 2)
-    .toUpperCase();
-
-  const workspaceLabel =
-    user.role === "teacher" ? "Teacher Control" : "Student Flow";
-
-  const toggleTheme = () => {
-    const nextDark = !dark;
-    setDark(nextDark);
-    document.documentElement.classList.toggle("dark", nextDark);
-    localStorage.setItem("theme", nextDark ? "dark" : "light");
-  };
+  const initials = profileName
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
-  const navBlock = (
-    <div className="flex h-full flex-col p-4">
-      <InteractiveTilt maxTilt={5}>
-        <Link
-          to="/"
-          className="glass-panel-strong flex items-center gap-3 px-3 py-3"
-        >
-          <div className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-brand-600 via-indigo-500 to-cyanx-500 text-white shadow-glow">
-            <BrandIcon />
+  return (
+    <div className="relative flex min-h-screen gap-6">
+      <aside className="glass-panel-strong sticky top-6 hidden h-[calc(100vh-3rem)] w-[290px] flex-col overflow-hidden p-5 lg:flex">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(255,248,231,0.16),transparent_28%)]" />
+
+        <div className="relative flex items-center gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#16c9ff,#17e3c3,#3f7bff)] text-lg font-black text-white shadow-[0_16px_34px_rgba(21,142,205,0.34)]">
+            AS
           </div>
           <div>
-            <p className="text-sm font-semibold tracking-tight">
-              ASAG Platform
+            <p className="text-[11px] uppercase tracking-[0.28em] text-white/72">
+              {pageLabel}
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-300">
-              {workspaceLabel}
-            </p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight text-[#FFF8E7]">
+              {pageTitle}
+            </h2>
           </div>
-        </Link>
-      </InteractiveTilt>
-
-      <nav className="mt-5 space-y-1">
-        {links.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.end}
-            onClick={() => setMobileOpen(false)}
-            className={({ isActive }) =>
-              `sidebar-link ${isActive ? "sidebar-link-active" : ""}`
-            }
-          >
-            <SideIcon d={linkIcons[item.icon]} />
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
-      </nav>
-
-      <InteractiveTilt className="mt-auto" maxTilt={4}>
-        <div className="glass-panel p-4 text-xs text-slate-500 dark:text-slate-300">
-          <p className="font-semibold text-slate-700 dark:text-slate-100">
-            AI-First Workflow
-          </p>
-          <p className="mt-1 leading-relaxed">
-            Fast feedback loops, richer analytics, and calmer grading.
-          </p>
         </div>
-      </InteractiveTilt>
-    </div>
-  );
 
-  const isAuthRoute =
-    location.pathname === "/login" || location.pathname === "/register";
-  if (isAuthRoute) return null;
-
-  return (
-    <>
-      <header className="fixed inset-x-0 top-0 z-40">
-        <div className="mx-auto flex w-full max-w-[1500px] items-center gap-3 px-4 pt-4 md:px-6 lg:pl-[19.5rem] lg:pr-8">
-          <InteractiveTilt className="w-full" maxTilt={3}>
-            <div className="glass-panel-strong flex h-16 w-full items-center justify-between px-4 md:px-5">
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setMobileOpen(true)}
-                  className="btn-ghost lg:hidden"
-                  aria-label="Open sidebar"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="h-[18px] w-[18px]"
-                    fill="none"
-                  >
-                    <path
-                      d="M4 7h16M4 12h16M4 17h12"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </button>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">
-                    {workspaceLabel}
-                  </p>
-                  <h1 className="font-display text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-                    {user.role === "teacher"
-                      ? "Command Center"
-                      : "Learning Dashboard"}
-                  </h1>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {user.role === "teacher" && (
-                  <Link
-                    to="/teacher/create-question"
-                    className="btn-ghost hidden sm:inline-flex"
-                  >
-                    + New Question
-                  </Link>
-                )}
-                <button
-                  type="button"
-                  onClick={toggleTheme}
-                  className="btn-ghost"
-                  aria-label="Toggle theme"
-                >
-                  <MoonSunIcon dark={dark} />
-                </button>
-                <button
-                  type="button"
-                  onClick={toggleMode}
-                  className="btn-ghost"
-                  aria-label={`Motion mode: ${mode}. Click to switch`}
-                  title={`Motion mode: ${mode === "calm" ? "Calm" : "Normal"}`}
-                >
-                  <MotionIcon mode={mode} />
-                  <span className="hidden sm:inline">
-                    {mode === "calm" ? "Calm" : "Motion"}
+        <div className="relative mt-8 rounded-[28px] border border-white/14 bg-white/8 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+          <div className="grid gap-2">
+            {links.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.end}
+                className={({ isActive }) =>
+                  isActive
+                    ? "group flex items-center gap-3 rounded-2xl border border-white/20 bg-[#FFF8E7] px-4 py-3 text-[#0047FF] shadow-[0_18px_38px_rgba(0,71,255,0.18)]"
+                    : "group flex items-center gap-3 rounded-2xl border border-transparent px-4 py-3 text-white/82 transition duration-150 hover:border-white/12 hover:bg-white/8 hover:text-[#FFF8E7]"
+                }
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/12 bg-white/10 text-base text-inherit">
+                  {link.icon}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold">{link.label}</span>
+                  <span className="block truncate text-[11px] text-inherit/70">
+                    {link.hint}
                   </span>
-                </button>
-                <div className="glass-panel hidden items-center gap-3 px-3 py-2 md:flex">
-                  <div className="text-right">
-                    <p className="text-sm font-semibold leading-tight text-slate-900 dark:text-slate-100">
-                      {user.username || user.email}
-                    </p>
-                    <p className="text-xs capitalize text-slate-500 dark:text-slate-300">
-                      {user.role}
-                    </p>
-                  </div>
-                  <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-brand-600 via-indigo-500 to-cyanx-500 text-xs font-semibold text-white">
-                    {initials}
-                  </div>
-                </div>
-                <motion.button
-                  whileTap={{ scale: 0.985 }}
-                  type="button"
-                  onClick={handleLogout}
-                  className="btn-ghost"
-                >
-                  Logout
-                </motion.button>
-              </div>
-            </div>
-          </InteractiveTilt>
+                </span>
+              </NavLink>
+            ))}
+          </div>
         </div>
-      </header>
 
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[18rem] p-4 lg:block">
-        {navBlock}
+        <div className="relative mt-auto overflow-hidden rounded-[28px] border border-white/16 bg-[linear-gradient(160deg,rgba(255,255,255,0.14),rgba(255,255,255,0.08))] p-5">
+          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+          <p className="text-xs uppercase tracking-[0.24em] text-white/72">
+            AI-first workflow
+          </p>
+          <h3 className="mt-3 text-lg font-semibold text-[#FFF8E7]">
+            Faster review loops
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-white/78">
+            Keep grading, question design, and insight panels inside one cleaner control surface.
+          </p>
+        </div>
       </aside>
 
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.button
-              type="button"
-              aria-label="Close sidebar"
-              className="fixed inset-0 z-40 bg-slate-900/45 lg:hidden"
-              onClick={() => setMobileOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
-            <motion.aside
-              className="fixed inset-y-0 left-0 z-50 w-[18rem] p-3 lg:hidden"
-              initial={{ x: -280 }}
-              animate={{ x: 0 }}
-              exit={{ x: -280 }}
-              transition={{ type: "spring", stiffness: 380, damping: 36 }}
-            >
-              {navBlock}
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
-    </>
+      <div className="min-w-0 flex-1">
+        <header className="glass-panel sticky top-6 z-40 flex min-h-[88px] items-center justify-between gap-4 px-5 py-4 md:px-6">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.28em] text-[#0047FF]/72">
+              {pageLabel}
+            </p>
+            <h1 className="mt-1 text-2xl font-semibold tracking-tight text-[#16305F]">
+              {pageTitle}
+            </h1>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            {role === "teacher" && (
+              <button
+                onClick={() => navigate("/teacher/create-question")}
+                className="btn-premium min-w-[170px]"
+                type="button"
+              >
+                + New Question
+              </button>
+            )}
+
+            <div className="flex items-center gap-3 rounded-[26px] border border-[#0047FF]/14 bg-white/85 px-3 py-2">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#16c9ff,#3f7bff)] text-sm font-bold text-white shadow-[0_10px_24px_rgba(21,142,205,0.28)]">
+                {initials}
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-[#16305F]">{profileName}</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-[#6F7F9D]">
+                  {role}
+                </p>
+              </div>
+            </div>
+
+            <button onClick={handleLogout} className="btn-ghost" type="button">
+              Logout
+            </button>
+          </div>
+        </header>
+
+        <main className="pt-6">
+          <Outlet />
+        </main>
+      </div>
+    </div>
   );
 }

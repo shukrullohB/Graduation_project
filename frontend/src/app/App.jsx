@@ -1,61 +1,17 @@
-import Navbar from "../components/Navbar";
+// Navbar is provided by route-level layouts for /teacher and /student
 import AppRoutes from "./routes";
 import { useAuth } from "../context/AuthContext";
 import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import LoadingSpinner from "../components/LoadingSpinner";
-import FuturisticBackground from "../components/ui/FuturisticBackground";
-
-const VISUAL_THEMES = [
-  { key: "ocean-neon", label: "Ocean Neon" },
-  { key: "emerald-aurora", label: "Emerald Aurora" },
-  { key: "cyber-magenta", label: "Cyber Magenta" },
-];
 
 export default function App() {
   const { loading, user } = useAuth();
   const location = useLocation();
-  const [visualTheme, setVisualTheme] = useState(() => {
-    const saved = localStorage.getItem("visualTheme");
-    return VISUAL_THEMES.some((item) => item.key === saved)
-      ? saved
-      : "ocean-neon";
-  });
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/register";
-  const hasShell = Boolean(user) && !isAuthPage;
 
-  const activeVisualLabel =
-    VISUAL_THEMES.find((item) => item.key === visualTheme)?.label ||
-    "Ocean Neon";
-
-  useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved === "dark") {
-      document.documentElement.classList.add("dark");
-      return;
-    }
-
-    if (saved === "light") {
-      document.documentElement.classList.remove("dark");
-      return;
-    }
-
-    document.documentElement.classList.add("dark");
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-visual-theme", visualTheme);
-    localStorage.setItem("visualTheme", visualTheme);
-  }, [visualTheme]);
-
-  const cycleVisualTheme = () => {
-    setVisualTheme((current) => {
-      const idx = VISUAL_THEMES.findIndex((item) => item.key === current);
-      const next = VISUAL_THEMES[(idx + 1) % VISUAL_THEMES.length];
-      return next.key;
-    });
-  };
+  // Permanent dark theme enforced by global CSS; no toggle.
 
   useEffect(() => {
     const onPress = (event) => {
@@ -120,30 +76,20 @@ export default function App() {
   }
 
   return (
-    <div className="app-canvas">
-      <FuturisticBackground visualTheme={visualTheme}>
-        <button
-          type="button"
-          className="style-switcher btn-ghost"
-          onClick={cycleVisualTheme}
-          aria-label={`Visual style: ${activeVisualLabel}. Click to switch palette`}
-          title={`Visual style: ${activeVisualLabel}`}
-        >
-          <span className="style-switcher-text">{activeVisualLabel}</span>
-        </button>
-        <Navbar />
-        <main
-          className={
-            isAuthPage
-              ? "min-h-screen"
-              : hasShell
-                ? "mx-auto w-full max-w-[1500px] px-4 pb-8 pt-24 md:px-6 lg:pl-[19.5rem] lg:pr-8"
-                : "mx-auto w-full max-w-[1200px] px-4 pb-8 pt-24 md:px-6"
-          }
-        >
-          <AppRoutes />
-        </main>
-      </FuturisticBackground>
+    <div
+      className="app-canvas"
+      style={{ background: "#FFF8E7", minHeight: "100vh" }}
+    >
+      <main
+        className={
+          isAuthPage
+            ? "min-h-screen"
+            : "mx-auto w-full max-w-[1500px] px-4 pb-8 pt-24 md:px-6 lg:pr-8"
+        }
+      >
+        <AppRoutes />
+      </main>
     </div>
   );
 }
+

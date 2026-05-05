@@ -1,18 +1,14 @@
-import { useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { login as loginApi } from "../api/auth.api";
 import { getApiErrorMessage } from "../api/http";
 import { useToast } from "../context/ToastContext";
-import { DEMO_MODE } from "../api/mockData";
-import FloatingField from "../components/ui/FloatingField";
-import GlassPanel from "../components/ui/GlassPanel";
-import PageTransition from "../components/ui/PageTransition";
-import InteractiveTilt from "../components/ui/InteractiveTilt";
 
 export default function LoginPage() {
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -21,145 +17,293 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
     try {
-      const res = await loginApi(form);
-      login(res.data.access_token, res.data.user);
-      navigate("/");
+      const res = await loginApi({ email, password });
+      const { access_token, user: userData } = res.data;
+
+      login(access_token, userData);
+
+      const dashboardPath =
+        userData.role === "teacher" ? "/teacher" : "/student";
+      navigate(dashboardPath, { replace: true });
     } catch (err) {
-      showToast(getApiErrorMessage(err, "Login failed"), "error");
+      const msg = getApiErrorMessage(
+        err,
+        "Invalid credentials. Please try again.",
+      );
+      setError(msg);
+      showToast(msg, "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const challengeCards = [
-    {
-      challenge: "Deadlines are close, but team bandwidth is thin",
-      outcome: "Spin up AI-assisted grading workflows in minutes.",
-    },
-    {
-      challenge: "Your product scales, but feedback quality drops",
-      outcome: "Keep scoring consistency with live review intelligence.",
-    },
-    {
-      challenge: "You need to launch improvements fast",
-      outcome: "Ship confident iterations with real-time analytics.",
-    },
-  ];
-
   return (
-    <PageTransition className="stage-spotlight relative min-h-screen px-4 py-8 md:px-6">
-      <div className="mx-auto grid min-h-[90vh] w-full max-w-[1240px] items-center gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-        <GlassPanel className="cinematic-hero relative hidden overflow-hidden p-8 lg:flex lg:min-h-[640px] lg:flex-col lg:justify-between">
-          <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-gradient-to-br from-white/50 to-transparent blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-gradient-to-br from-cyan-300/35 to-transparent blur-3xl" />
-
-          <div className="relative z-10 max-w-xl">
-            <span className="inline-flex rounded-full border border-white/30 bg-white/35 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-700 dark:text-slate-100">
-              AI-Powered Grading
-            </span>
-            <h1 className="mt-6 font-display text-5xl font-semibold leading-[1.03] tracking-tight text-slate-900 dark:text-slate-50">
-              Design-level experience.
-              <br />
-              Classroom-level impact.
-            </h1>
-            <p className="mt-5 max-w-lg text-[17px] leading-relaxed text-slate-600 dark:text-slate-200">
-              Build an assessment workflow that looks premium and performs under
-              pressure, from first submission to final feedback.
-            </p>
-            <div className="mt-6 inline-flex items-center rounded-full border border-white/30 bg-white/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-700 dark:text-slate-200">
-              Future-ready Learning Platform
-            </div>
+    <div
+      style={{
+        display: "flex",
+        minHeight: "100vh",
+        background: "#FFF8E7",
+      }}
+    >
+      {/* LEFT PANEL - BLUE */}
+      <div
+        style={{
+          flex: 1,
+          background: "#0047FF",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "60px 40px",
+          color: "#FFF8E7",
+        }}
+      >
+        <div style={{ maxWidth: "400px" }}>
+          <div
+            style={{
+              fontSize: "12px",
+              letterSpacing: "0.12em",
+              fontWeight: "600",
+              marginBottom: "20px",
+              opacity: 0.8,
+            }}
+          >
+            AI-POWERED GRADING
           </div>
+          <h1
+            style={{
+              fontSize: "42px",
+              fontWeight: "700",
+              lineHeight: "1.2",
+              margin: "0 0 20px 0",
+            }}
+          >
+            Design-level experience. Classroom-level impact.
+          </h1>
+          <p
+            style={{
+              fontSize: "15px",
+              lineHeight: "1.7",
+              margin: 0,
+              opacity: 0.75,
+            }}
+          >
+            Build an assessment workflow that looks premium and performs under
+            pressure. Streamline your grading process with AI-powered insights.
+          </p>
+        </div>
+      </div>
 
-          <div className="relative z-10 grid gap-3">
-            {challengeCards.map((item, i) => (
-              <InteractiveTilt
-                key={item.challenge}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + i * 0.08, duration: 0.35 }}
-                className="control-module rounded-2xl p-4"
-              >
-                <p className="text-xs uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">
-                  Challenge
-                </p>
-                <p className="mt-1 text-sm font-medium leading-relaxed text-slate-800 dark:text-slate-100">
-                  {item.challenge}
-                </p>
-                <p className="mt-2 text-xs uppercase tracking-[0.14em] text-brand-700 dark:text-cyan-300">
-                  Outcome
-                </p>
-                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                  {item.outcome}
-                </p>
-              </InteractiveTilt>
-            ))}
-          </div>
-        </GlassPanel>
-
-        <GlassPanel
-          className="glass-panel-strong stage-spotlight mx-auto w-full max-w-[500px] p-6 sm:p-8"
-          delay={0.05}
+      {/* RIGHT PANEL - CREAM */}
+      <div
+        style={{
+          flex: 1,
+          background: "#FFF8E7",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "40px",
+        }}
+      >
+        {/* FORM CARD - WHITE WITH BLUE BORDER */}
+        <div
+          style={{
+            background: "#FFFFFF",
+            border: "2px solid #0047FF",
+            borderRadius: "16px",
+            padding: "40px",
+            width: "100%",
+            maxWidth: "360px",
+          }}
         >
-          <div className="mx-auto mb-7 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-600 via-indigo-500 to-cyanx-500 text-2xl text-white shadow-glow">
-            🎓
-          </div>
-          <div className="text-center">
-            <h2 className="font-display text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-              Welcome back
-            </h2>
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-300">
-              Sign in to ASAG Intelligent Grading Platform
-            </p>
-          </div>
+          <h2
+            style={{
+              fontSize: "24px",
+              fontWeight: "700",
+              color: "#0A0A1A",
+              margin: "0 0 8px 0",
+            }}
+          >
+            Welcome Back
+          </h2>
+          <p
+            style={{
+              fontSize: "13px",
+              color: "#555555",
+              margin: "0 0 28px 0",
+            }}
+          >
+            Sign in to ASAG Grading Platform
+          </p>
 
-          {DEMO_MODE && (
-            <div className="mt-5 rounded-2xl border border-amber-300/50 bg-amber-100/70 px-4 py-3 text-sm text-amber-900 dark:border-amber-300/20 dark:bg-amber-300/10 dark:text-amber-100">
-              Demo mode: use <strong>student</strong> or{" "}
-              <strong>teacher</strong> as email.
+          {error && (
+            <div
+              style={{
+                color: "#C92A2A",
+                marginBottom: "20px",
+                fontSize: "13px",
+                background: "rgba(201,42,42,0.08)",
+                border: "1px solid rgba(201,42,42,0.2)",
+                padding: "12px 14px",
+                borderRadius: "8px",
+              }}
+            >
+              {error}
             </div>
           )}
 
-          <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
-            <FloatingField
-              id="login-email"
-              label="Email"
-              type="email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              required
-            />
-            <FloatingField
-              id="login-password"
-              label="Password"
-              type="password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              required
-            />
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+          >
+            {/* EMAIL FIELD */}
+            <div>
+              <label
+                htmlFor="login-email"
+                style={{
+                  display: "block",
+                  color: "#0047FF",
+                  fontSize: "12px",
+                  letterSpacing: "0.08em",
+                  marginBottom: "8px",
+                  fontWeight: "600",
+                }}
+              >
+                EMAIL
+              </label>
+              <input
+                id="login-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={{
+                  background: "#FFFFFF",
+                  border: "1px solid rgba(0,71,255,0.2)",
+                  padding: "12px 14px",
+                  color: "#0A0A1A",
+                  width: "100%",
+                  fontSize: "14px",
+                  outline: "none",
+                  boxSizing: "border-box",
+                  borderRadius: "8px",
+                  transition: "all 0.2s ease",
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = "#0047FF";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 0 3px rgba(0,71,255,0.1)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(0,71,255,0.2)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              />
+            </div>
 
-            <motion.button
-              whileTap={{ scale: 0.985 }}
+            {/* PASSWORD FIELD */}
+            <div>
+              <label
+                htmlFor="login-password"
+                style={{
+                  display: "block",
+                  color: "#0047FF",
+                  fontSize: "12px",
+                  letterSpacing: "0.08em",
+                  marginBottom: "8px",
+                  fontWeight: "600",
+                }}
+              >
+                PASSWORD
+              </label>
+              <input
+                id="login-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  background: "#FFFFFF",
+                  border: "1px solid rgba(0,71,255,0.2)",
+                  padding: "12px 14px",
+                  color: "#0A0A1A",
+                  width: "100%",
+                  fontSize: "14px",
+                  outline: "none",
+                  boxSizing: "border-box",
+                  borderRadius: "8px",
+                  transition: "all 0.2s ease",
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = "#0047FF";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 0 3px rgba(0,71,255,0.1)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(0,71,255,0.2)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              />
+            </div>
+
+            {/* SUBMIT BUTTON */}
+            <button
               type="submit"
-              className="btn-premium mt-2 w-full"
               disabled={loading}
+              style={{
+                width: "100%",
+                background: "#0047FF",
+                color: "#FFF8E7",
+                border: "none",
+                borderRadius: "8px",
+                fontWeight: "700",
+                fontSize: "14px",
+                padding: "12px 16px",
+                cursor: loading ? "not-allowed" : "pointer",
+                textTransform: "uppercase",
+                letterSpacing: "1.2px",
+                transition: "all 0.2s ease",
+                opacity: loading ? 0.6 : 1,
+              }}
+              onMouseEnter={(e) =>
+                !loading && (e.currentTarget.style.background = "#0035CC")
+              }
+              onMouseLeave={(e) =>
+                !loading && (e.currentTarget.style.background = "#0047FF")
+              }
             >
               {loading ? "Signing in..." : "Sign In"}
-            </motion.button>
+            </button>
           </form>
 
-          <p className="mt-5 text-center text-sm text-slate-500 dark:text-slate-300">
-            Don&apos;t have an account?{" "}
+          {/* REGISTER LINK */}
+          <p
+            style={{
+              fontSize: "13px",
+              color: "#555555",
+              marginTop: "24px",
+              textAlign: "center",
+              margin: "24px 0 0 0",
+            }}
+          >
+            No account?{" "}
             <Link
               to="/register"
-              className="font-semibold text-brand-600 transition hover:text-brand-700"
+              style={{
+                color: "#0047FF",
+                fontWeight: "700",
+                textDecoration: "none",
+                transition: "color 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#0035CC")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#0047FF")}
             >
               Create one
             </Link>
           </p>
-        </GlassPanel>
+        </div>
       </div>
-    </PageTransition>
+    </div>
   );
 }

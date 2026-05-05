@@ -3,6 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 import LoadingSpinner from "../components/LoadingSpinner";
+import Navbar from "../components/Navbar";
+import NavigateByRole from "../components/NavigateByRole";
 
 const LoginPage = lazy(() => import("../pages/LoginPage"));
 const RegisterPage = lazy(() => import("../pages/RegisterPage"));
@@ -32,38 +34,25 @@ export default function AppRoutes() {
         <Route path="/register" element={<RegisterPage />} />
 
         <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
-          <Route path="/student" element={<StudentDashboard />} />
-          <Route path="/student/question/:id" element={<QuestionPage />} />
-          <Route path="/student/submit/:id" element={<AnswerSubmitPage />} />
-          <Route path="/student/my-answers" element={<MyAnswersPage />} />
-          <Route path="/student/analytics" element={<AnalyticsDashboard />} />
+          <Route path="/student" element={<Navbar role="student" />}>
+            <Route index element={<StudentDashboard />} />
+            <Route path="question/:id" element={<QuestionPage />} />
+            <Route path="submit/:id" element={<AnswerSubmitPage />} />
+            <Route path="my-answers" element={<MyAnswersPage />} />
+            <Route path="analytics" element={<AnalyticsDashboard />} />
+          </Route>
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={["teacher"]} />}>
-          <Route path="/teacher" element={<TeacherDashboard />} />
-          <Route
-            path="/teacher/create-question"
-            element={<CreateQuestionPage />}
-          />
-          <Route
-            path="/teacher/review/:answerId"
-            element={<TeacherReviewPage />}
-          />
-          <Route path="/teacher/analytics" element={<AnalyticsDashboard />} />
+          <Route path="/teacher" element={<Navbar role="teacher" />}>
+            <Route index element={<TeacherDashboard />} />
+            <Route path="create-question" element={<CreateQuestionPage />} />
+            <Route path="review/:answerId" element={<TeacherReviewPage />} />
+            <Route path="analytics" element={<AnalyticsDashboard />} />
+          </Route>
         </Route>
 
-        <Route
-          path="/"
-          element={
-            user?.role === "teacher" ? (
-              <Navigate to="/teacher" replace />
-            ) : user?.role === "student" ? (
-              <Navigate to="/student" replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+        <Route path="/" element={<NavigateByRole />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>

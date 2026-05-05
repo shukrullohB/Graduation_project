@@ -1,15 +1,58 @@
 export default function SkeletonBlocks() {
   return (
     <div className="space-y-4">
-      <div className="h-8 w-56 rounded-xl bg-white/50 shimmer" />
+      <div
+        style={{
+          height: "32px",
+          width: "224px",
+          borderRadius: "8px",
+          background: "rgba(0,71,255,0.08)",
+          animation: "shimmer 2s infinite",
+        }}
+      />
       <div className="grid gap-3 md:grid-cols-3">
-        <div className="h-28 rounded-2xl bg-white/55 shimmer" />
-        <div className="h-28 rounded-2xl bg-white/55 shimmer" />
-        <div className="h-28 rounded-2xl bg-white/55 shimmer" />
+        <div
+          style={{
+            height: "112px",
+            borderRadius: "12px",
+            background: "rgba(0,71,255,0.08)",
+            animation: "shimmer 2s infinite",
+          }}
+        />
+        <div
+          style={{
+            height: "112px",
+            borderRadius: "12px",
+            background: "rgba(0,71,255,0.08)",
+            animation: "shimmer 2s infinite",
+          }}
+        />
+        <div
+          style={{
+            height: "112px",
+            borderRadius: "12px",
+            background: "rgba(0,71,255,0.08)",
+            animation: "shimmer 2s infinite",
+          }}
+        />
       </div>
       <div className="grid gap-3 md:grid-cols-2">
-        <div className="h-56 rounded-2xl bg-white/60 shimmer" />
-        <div className="h-56 rounded-2xl bg-white/60 shimmer" />
+        <div
+          style={{
+            height: "224px",
+            borderRadius: "12px",
+            background: "rgba(0,71,255,0.08)",
+            animation: "shimmer 2s infinite",
+          }}
+        />
+        <div
+          style={{
+            height: "224px",
+            borderRadius: "12px",
+            background: "rgba(0,71,255,0.08)",
+            animation: "shimmer 2s infinite",
+          }}
+        />
       </div>
     </div>
   );

@@ -1,13 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+﻿import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { getQuestions } from "../api/questions.api";
 import { getMyAnswers } from "../api/answers.api";
-import LoadingSpinner from "../components/LoadingSpinner";
-import PageTransition from "../components/ui/PageTransition";
-import GlassPanel from "../components/ui/GlassPanel";
-import MetricCard from "../components/ui/MetricCard";
-import InteractiveTilt from "../components/ui/InteractiveTilt";
 
 export default function StudentDashboard() {
   const { data: questions, isLoading: qLoading } = useQuery({
@@ -25,132 +19,371 @@ export default function StudentDashboard() {
   const answeredCount = answeredIds.size;
   const remainingCount = Math.max(totalQuestions - answeredCount, 0);
 
-  if (qLoading) return <LoadingSpinner text="Preparing your study board..." />;
-
   return (
-    <PageTransition className="space-y-4">
-      <InteractiveTilt maxTilt={4}>
-        <GlassPanel className="p-6 md:p-7">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300">
-                Student Analytics
-              </p>
-              <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 md:text-4xl">
-                Learning Flight Deck
-              </h1>
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                Keep momentum, finish pending answers, and build a stronger
-                feedback trail with every submission.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-emerald-300/45 bg-emerald-100/70 px-4 py-2 text-sm font-medium text-emerald-900 dark:border-emerald-300/20 dark:bg-emerald-300/10 dark:text-emerald-100">
-              {answeredCount}/{totalQuestions} completed
-            </div>
-          </div>
-        </GlassPanel>
-      </InteractiveTilt>
+    <div
+      style={{
+        background: "#FFF8E7",
+        minHeight: "100vh",
+        padding: "24px",
+      }}
+    >
+      {/* Hero Card */}
+      <div
+        style={{
+          background: "#0047FF",
+          borderRadius: "14px",
+          padding: "40px",
+          marginBottom: "32px",
+          color: "#FFF8E7",
+        }}
+      >
+        <p
+          style={{
+            fontSize: "11px",
+            letterSpacing: "0.12em",
+            fontWeight: "600",
+            margin: "0 0 12px 0",
+            opacity: 0.9,
+          }}
+        >
+          STUDENT PORTAL
+        </p>
+        <h1
+          style={{
+            fontSize: "32px",
+            fontWeight: "700",
+            margin: "0 0 12px 0",
+            lineHeight: 1.2,
+          }}
+        >
+          Learning Hub
+        </h1>
+        <p
+          style={{
+            fontSize: "15px",
+            margin: 0,
+            opacity: 0.75,
+            lineHeight: 1.5,
+          }}
+        >
+          Keep momentum, answer pending questions, and build a stronger
+          portfolio with every submission.
+        </p>
+      </div>
 
-      <section className="grid gap-3 md:grid-cols-3">
-        <MetricCard
-          icon="📚"
-          label="Total Questions"
-          value={totalQuestions}
-          trend="Open tasks in this module"
-          tone="brand"
-        />
-        <MetricCard
-          icon="✅"
-          label="Submitted"
-          value={answeredCount}
-          trend="Already reviewed by system"
-          tone="mint"
-        />
-        <MetricCard
-          icon="🕒"
-          label="Remaining"
-          value={remainingCount}
-          trend="Keep a steady pace"
-          tone="violet"
-        />
-      </section>
-
-      <InteractiveTilt maxTilt={3.5}>
-        <GlassPanel className="p-4 md:p-5">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-display text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-              Open Questions
-            </h2>
-            <p className="text-xs uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">
-              Action queue
-            </p>
-          </div>
-
-          {questions?.length === 0 && (
-            <div className="grid place-items-center rounded-2xl border border-dashed border-slate-300/60 bg-white/45 px-6 py-14 text-center dark:border-slate-500/35 dark:bg-slate-900/25">
-              <div className="space-y-2">
-                <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-cyan-100 text-xl dark:bg-cyan-300/20">
-                  📚
-                </div>
-                <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
-                  No questions available yet.
+      {/* Stat Cards */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: "20px",
+          marginBottom: "32px",
+        }}
+      >
+        {[
+          {
+            label: "TOTAL QUESTIONS",
+            value: totalQuestions,
+            icon: "📊",
+            desc: "Open tasks in this module",
+          },
+          {
+            label: "SUBMITTED",
+            value: answeredCount,
+            icon: "✓",
+            desc: "Already reviewed by system",
+          },
+          {
+            label: "REMAINING",
+            value: remainingCount,
+            icon: "📝",
+            desc: "Keep a steady pace",
+          },
+        ].map((stat, i) => (
+          <div
+            key={i}
+            style={{
+              background: "#FFFFFF",
+              border: "1px solid rgba(0,71,255,0.12)",
+              borderRadius: "12px",
+              padding: "24px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                justifyContent: "space-between",
+              }}
+            >
+              <div style={{ flex: 1 }}>
+                <p
+                  style={{
+                    fontSize: "11px",
+                    letterSpacing: "0.1em",
+                    color: "#888888",
+                    margin: "0 0 12px 0",
+                    fontWeight: "600",
+                  }}
+                >
+                  {stat.label}
                 </p>
-                <p className="text-sm text-slate-500 dark:text-slate-300">
-                  Ask your teacher to publish the next assignment set.
+                <p
+                  style={{
+                    fontSize: "28px",
+                    fontWeight: "700",
+                    color: "#0A0A1A",
+                    margin: "0 0 8px 0",
+                  }}
+                >
+                  {stat.value}
+                </p>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#555555",
+                    margin: 0,
+                  }}
+                >
+                  {stat.desc}
                 </p>
               </div>
-            </div>
-          )}
-
-          <div className="space-y-3">
-            {questions?.map((q, index) => (
-              <InteractiveTilt
-                key={q.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25, delay: index * 0.03 }}
-                whileHover={{ y: -4 }}
-                className="control-module p-4"
+              <div
+                style={{
+                  width: "56px",
+                  height: "56px",
+                  background: "rgba(0,71,255,0.08)",
+                  borderRadius: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "24px",
+                  marginLeft: "16px",
+                }}
               >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h3 className="text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-                    {q.title}
-                  </h3>
-                  <span className="rounded-full bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-800 dark:bg-indigo-300/20 dark:text-indigo-100">
-                    Max: {q.max_score}
-                  </span>
-                </div>
+                {stat.icon}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                  {(q.prompt || q.description || "").slice(0, 140)}
-                  {(q.prompt || q.description || "").length > 140 ? "..." : ""}
-                </p>
+      {/* Open Questions Section */}
+      <div
+        style={{
+          background: "#FFFFFF",
+          border: "1px solid rgba(0,71,255,0.1)",
+          borderRadius: "12px",
+          padding: "24px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "18px",
+              fontWeight: "600",
+              color: "#0A0A1A",
+              margin: 0,
+            }}
+          >
+            Open Questions
+          </h2>
+          <span
+            style={{
+              fontSize: "11px",
+              letterSpacing: "0.1em",
+              color: "#888888",
+              fontWeight: "600",
+            }}
+          >
+            ACTION QUEUE
+          </span>
+        </div>
 
-                <div className="mt-3 flex items-center justify-between gap-3">
-                  <span className="text-xs text-slate-500 dark:text-slate-300">
+        {questions?.length === 0 ? (
+          <div
+            style={{
+              display: "grid",
+              placeItems: "center",
+              padding: "48px 32px",
+              textAlign: "center",
+              background: "rgba(0,71,255,0.02)",
+              borderRadius: "10px",
+              border: "1px dashed rgba(0,71,255,0.15)",
+            }}
+          >
+            <div
+              style={{
+                width: "56px",
+                height: "56px",
+                background: "rgba(0,71,255,0.1)",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "28px",
+                marginBottom: "16px",
+              }}
+            >
+              📊
+            </div>
+            <p
+              style={{
+                fontSize: "16px",
+                fontWeight: "600",
+                color: "#0A0A1A",
+                margin: "0 0 8px 0",
+              }}
+            >
+              No questions available yet.
+            </p>
+            <p
+              style={{
+                fontSize: "13px",
+                color: "#555555",
+                margin: 0,
+              }}
+            >
+              Ask your teacher to publish the next assignment set.
+            </p>
+          </div>
+        ) : (
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+          >
+            {questions.map((q) => (
+              <div
+                key={q.id}
+                style={{
+                  padding: "20px 24px",
+                  background: "#FAFAFA",
+                  border: "1px solid rgba(0,71,255,0.12)",
+                  borderRadius: "10px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  transition: "all 0.2s ease",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#F5F8FF";
+                  e.currentTarget.style.borderColor = "rgba(0,71,255,0.25)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#FAFAFA";
+                  e.currentTarget.style.borderColor = "rgba(0,71,255,0.12)";
+                }}
+              >
+                <div style={{ flex: 1 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "12px",
+                      alignItems: "center",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    <h3
+                      style={{
+                        margin: 0,
+                        color: "#0A0A1A",
+                        fontWeight: "600",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {q.title}
+                    </h3>
+                    <span
+                      style={{
+                        background: "rgba(0,71,255,0.1)",
+                        color: "#0047FF",
+                        padding: "4px 10px",
+                        borderRadius: "6px",
+                        fontSize: "11px",
+                        fontWeight: "600",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Max: {q.max_score}
+                    </span>
+                  </div>
+                  <p
+                    style={{
+                      margin: "0 0 12px 0",
+                      color: "#888888",
+                      fontSize: "13px",
+                      lineHeight: "1.5",
+                    }}
+                  >
+                    {(q.prompt || q.description || "").slice(0, 140)}
+                    {(q.prompt || q.description || "").length > 140
+                      ? "..."
+                      : ""}
+                  </p>
+                  <span
+                    style={{
+                      color: "#555555",
+                      fontSize: "12px",
+                    }}
+                  >
                     {answeredIds.has(q.id)
-                      ? "Already submitted"
+                      ? "✓ Already submitted"
                       : "Submission pending"}
                   </span>
-
-                  {answeredIds.has(q.id) ? (
-                    <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-300/20 dark:text-emerald-100">
-                      Submitted
-                    </span>
-                  ) : (
-                    <Link
-                      to={`/student/submit/${q.id}`}
-                      className="btn-premium px-4 py-2 text-xs"
-                    >
-                      Answer Now
-                    </Link>
-                  )}
                 </div>
-              </InteractiveTilt>
+
+                {answeredIds.has(q.id) ? (
+                  <span
+                    style={{
+                      background: "rgba(0,71,255,0.1)",
+                      color: "#0047FF",
+                      padding: "8px 14px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                      whiteSpace: "nowrap",
+                      marginLeft: "16px",
+                    }}
+                  >
+                    Submitted
+                  </span>
+                ) : (
+                  <Link
+                    to={`/student/submit/${q.id}`}
+                    style={{
+                      background: "#0047FF",
+                      color: "#FFF8E7",
+                      padding: "10px 20px",
+                      borderRadius: "8px",
+                      textDecoration: "none",
+                      fontWeight: "700",
+                      fontSize: "12px",
+                      whiteSpace: "nowrap",
+                      transition: "background 0.2s ease",
+                      marginLeft: "16px",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background = "#0035CC")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "#0047FF")
+                    }
+                  >
+                    Answer Question
+                  </Link>
+                )}
+              </div>
             ))}
           </div>
-        </GlassPanel>
-      </InteractiveTilt>
-    </PageTransition>
+        )}
+      </div>
+    </div>
   );
 }
