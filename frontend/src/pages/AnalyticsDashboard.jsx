@@ -90,7 +90,7 @@ export default function AnalyticsDashboard() {
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#FFF8E7] md:text-4xl">
               Performance Intelligence Layer
             </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/82 md:text-base">
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white md:text-base">
               See where scores are climbing, where understanding breaks down, and how the distribution is shifting over time.
             </p>
           </div>
@@ -116,21 +116,30 @@ export default function AnalyticsDashboard() {
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {metrics.map((metric, index) => (
-          <GlassPanel key={metric.label} className="relative overflow-hidden p-5">
-            <div className={`absolute inset-0 bg-gradient-to-br ${metricPalette[index]} opacity-100`} />
-            <div className="relative">
-              <p className="text-[11px] uppercase tracking-[0.24em] text-[#6F7F9D]">
+          <GlassPanel
+            key={metric.label}
+            className="group relative overflow-hidden p-5 transition duration-200 hover:border-[#0047FF]/35 hover:bg-[#0047FF]"
+          >
+            <div
+              className={`absolute inset-0 bg-gradient-to-br ${metricPalette[index]} opacity-100 transition duration-200 group-hover:opacity-0`}
+            />
+            <div className="relative transition duration-200 group-hover:text-white">
+              <p className="text-[11px] uppercase tracking-[0.24em] text-[#6F7F9D] transition duration-200 group-hover:text-white/78">
                 {metric.label}
               </p>
               <div className="mt-4 flex items-end gap-2">
-                <span className="text-4xl font-semibold tracking-tight text-[#16305F]">
+                <span className="text-4xl font-semibold tracking-tight text-[#16305F] transition duration-200 group-hover:text-white">
                   {metric.value}
                 </span>
                 {metric.suffix ? (
-                  <span className="pb-1 text-sm text-[#6F7F9D]">{metric.suffix}</span>
+                  <span className="pb-1 text-sm text-[#6F7F9D] transition duration-200 group-hover:text-white/78">
+                    {metric.suffix}
+                  </span>
                 ) : null}
               </div>
-              <p className="mt-4 text-sm leading-6 text-[#556581]">{metric.note}</p>
+              <p className="mt-4 text-sm leading-6 text-[#556581] transition duration-200 group-hover:text-white/88">
+                {metric.note}
+              </p>
             </div>
           </GlassPanel>
         ))}

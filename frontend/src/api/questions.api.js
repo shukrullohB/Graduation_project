@@ -6,11 +6,14 @@ const normalizeQuestion = (q) => ({
   description: q.description ?? q.prompt,
 });
 
+const normalizeQuestionList = (payload) =>
+  Array.isArray(payload) ? payload.map(normalizeQuestion) : [];
+
 export const getQuestions = () => {
-  if (DEMO_MODE) return Promise.resolve({ data: mockQuestions });
+  if (DEMO_MODE) return Promise.resolve({ data: normalizeQuestionList(mockQuestions) });
   return http
     .get("/questions")
-    .then((res) => ({ ...res, data: (res.data || []).map(normalizeQuestion) }));
+    .then((res) => ({ ...res, data: normalizeQuestionList(res.data) }));
 };
 
 export const getQuestion = (id) => {

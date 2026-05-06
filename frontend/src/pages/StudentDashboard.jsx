@@ -2,20 +2,66 @@
 import { Link } from "react-router-dom";
 import { getQuestions } from "../api/questions.api";
 import { getMyAnswers } from "../api/answers.api";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function StudentDashboard() {
-  const { data: questions, isLoading: qLoading } = useQuery({
+  const {
+    data: questions = [],
+    isLoading: qLoading,
+    isError: qError,
+  } = useQuery({
     queryKey: ["questions"],
     queryFn: () => getQuestions().then((r) => r.data),
   });
 
-  const { data: answers } = useQuery({
+  const {
+    data: answers = [],
+    isLoading: aLoading,
+    isError: aError,
+  } = useQuery({
     queryKey: ["myAnswers"],
     queryFn: () => getMyAnswers().then((r) => r.data),
   });
 
-  const answeredIds = new Set(answers?.map((a) => a.question_id));
-  const totalQuestions = questions?.length ?? 0;
+  const questionList = Array.isArray(questions) ? questions : [];
+  const answerList = Array.isArray(answers) ? answers : [];
+
+  if (qLoading || aLoading) {
+    return <LoadingSpinner text="Loading student dashboard..." />;
+  }
+
+  if (qError || aError) {
+    return (
+      <div
+        style={{
+          background: "#FFF8E7",
+          minHeight: "100vh",
+          padding: "24px",
+        }}
+      >
+        <div
+          style={{
+            background: "#FFFFFF",
+            border: "1px solid rgba(201,42,42,0.18)",
+            borderRadius: "12px",
+            padding: "24px",
+            color: "#0A0A1A",
+          }}
+        >
+          <h2 style={{ margin: "0 0 8px 0", color: "#C92A2A" }}>
+            Dashboard yuklanmadi
+          </h2>
+          <p style={{ margin: 0, color: "#555555" }}>
+            Savollar yoki javoblarni olishda xatolik yuz berdi. Backend ishlab
+            turganini tekshirib, sahifani yangilang.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const answeredIds = new Set(answerList.map((a) => a.question_id));
+  const totalQuestions = questionList.length;
   const answeredCount = answeredIds.size;
   const remainingCount = Math.max(totalQuestions - answeredCount, 0);
 
@@ -207,7 +253,7 @@ export default function StudentDashboard() {
           </span>
         </div>
 
-        {questions?.length === 0 ? (
+        {questionList.length === 0 ? (
           <div
             style={{
               display: "grid",
@@ -258,7 +304,7 @@ export default function StudentDashboard() {
           <div
             style={{ display: "flex", flexDirection: "column", gap: "12px" }}
           >
-            {questions.map((q) => (
+            {questionList.map((q) => (
               <div
                 key={q.id}
                 style={{

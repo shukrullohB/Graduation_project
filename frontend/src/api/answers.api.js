@@ -10,13 +10,18 @@ const normalizeAnswer = (answer, questionMap = {}) => ({
   student_username: answer.student_username ?? `Student #${answer.student_id}`,
 });
 
+const normalizeAnswerList = (payload, questionMap = {}) =>
+  Array.isArray(payload)
+    ? payload.map((answer) => normalizeAnswer(answer, questionMap))
+    : [];
+
 export const submitAnswer = (data) => {
   if (DEMO_MODE) return Promise.resolve({ data: { ...data, id: Date.now() } });
   return http.post("/answers/submit", data);
 };
 
 export const getMyAnswers = async () => {
-  if (DEMO_MODE) return Promise.resolve({ data: mockAnswers });
+  if (DEMO_MODE) return Promise.resolve({ data: normalizeAnswerList(mockAnswers) });
 
   const [answersRes, questionsRes] = await Promise.all([
     http.get("/answers/my"),
@@ -24,11 +29,14 @@ export const getMyAnswers = async () => {
   ]);
 
   const questionMap = Object.fromEntries(
-    (questionsRes.data || []).map((q) => [q.id, q.title]),
+    (Array.isArray(questionsRes.data) ? questionsRes.data : []).map((q) => [
+      q.id,
+      q.title,
+    ]),
   );
 
   return {
-    data: (answersRes.data || []).map((a) => normalizeAnswer(a, questionMap)),
+    data: normalizeAnswerList(answersRes.data, questionMap),
   };
 };
 
