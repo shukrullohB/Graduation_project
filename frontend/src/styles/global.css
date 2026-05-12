@@ -946,6 +946,287 @@ select {
   margin-bottom: 1rem;
 }
 
+.stat-card--total-pop {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(42, 107, 255, 0.08), transparent 28%),
+    linear-gradient(165deg, #ffffff, #f8fbff 72%);
+}
+
+.submission-pop {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow:
+    18px 18px 22px 0 rgba(171, 171, 171, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  margin-bottom: 0.35rem;
+}
+
+.submission-pop svg {
+  width: 32px;
+  height: auto;
+}
+
+.submission-pop svg:last-child {
+  position: absolute;
+  transform: translate(8px, -8px);
+}
+
+.submission-pop:active {
+  animation: submission-pop-press 0.2s linear;
+}
+
+.submission-pop:active svg:last-child {
+  animation: submission-pop-bounce 0.2s linear;
+}
+
+@keyframes submission-pop-press {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.92);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes submission-pop-bounce {
+  50% {
+    transform: rotate(6deg) translate(16px, -18px);
+  }
+
+  100% {
+    transform: scale(0.92) rotate(10deg) translate(24px, -26px);
+    opacity: 0;
+  }
+}
+
+.stat-card--reviewed-cubes {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(47, 113, 255, 0.09), transparent 30%),
+    linear-gradient(165deg, #ffffff, #f6faff 72%);
+}
+
+.review-cubes {
+  --primary: #275efe;
+  --primary-light: #2f71ff;
+  position: relative;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 0.35rem;
+  transform-style: preserve-3d;
+}
+
+.review-cubes__floor {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(
+    45deg,
+    rgba(39, 94, 254, 0.18) 0%,
+    rgba(39, 94, 254, 0.18) 50%,
+    rgba(47, 113, 255, 0.32) 50%,
+    rgba(47, 113, 255, 0.32) 100%
+  );
+  transform: translateX(-50%) rotate(45deg) scale(0.9);
+  border-radius: 12px;
+  animation: review-floor-pulse 3s ease-in-out infinite;
+  box-shadow: 0 10px 22px rgba(39, 94, 254, 0.18);
+}
+
+.review-cubes__stack {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  animation: review-cube-float 3s ease-in-out infinite;
+}
+
+.review-cubes__stack span,
+.review-cubes__stack span::before,
+.review-cubes__stack span::after {
+  position: absolute;
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: var(--primary);
+}
+
+.review-cubes__stack span {
+  transform: rotate(45deg);
+  border-radius: 5px;
+  box-shadow: 0 8px 16px rgba(39, 94, 254, 0.22);
+}
+
+.review-cubes__stack span::before {
+  transform: skewY(-45deg) translate(-9px, 9px);
+  background: var(--primary-light);
+  border-radius: 5px;
+  filter: brightness(1.05);
+}
+
+.review-cubes__stack span::after {
+  transform: skewX(-45deg) translate(9px, 9px);
+  background: #5d92ff;
+  border-radius: 5px;
+  filter: brightness(1.15);
+}
+
+.review-cubes__stack--1 {
+  left: 8px;
+  top: 30px;
+  animation-delay: 0s;
+}
+
+.review-cubes__stack--2 {
+  left: 25px;
+  top: 16px;
+  animation-delay: 0.35s;
+}
+
+.review-cubes__stack--3 {
+  left: 42px;
+  top: 30px;
+  animation-delay: 0.7s;
+}
+
+.review-cubes__stack--4 {
+  left: 25px;
+  top: 44px;
+  animation-delay: 1.05s;
+}
+
+@keyframes review-cube-float {
+  0%,
+  100% {
+    transform: translateY(8px) scale(0.92);
+    opacity: 0.55;
+  }
+
+  25% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  60% {
+    transform: translateY(-8px) scale(1.04);
+    opacity: 0.92;
+  }
+}
+
+@keyframes review-floor-pulse {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(45deg) scale(0.78);
+    opacity: 0.4;
+  }
+
+  35%,
+  75% {
+    transform: translateX(-50%) rotate(45deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.stat-card--pending-radar {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(0, 71, 255, 0.08), transparent 30%),
+    linear-gradient(165deg, #ffffff, #f8fbff 72%);
+}
+
+.pending-radar {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  background: transparent;
+  border-radius: 28%;
+  border: 1px solid rgba(0, 71, 255, 0.26);
+  box-shadow:
+    0 12px 24px rgba(0, 71, 255, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 0.35rem;
+}
+
+.pending-radar::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 28%;
+  border: 1px dashed rgba(0, 71, 255, 0.26);
+  box-shadow:
+    inset -3px -3px 12px rgba(255, 255, 255, 0.55),
+    inset 3px 3px 14px rgba(0, 71, 255, 0.08);
+}
+
+.pending-radar::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 28%;
+  border: 1px dashed rgba(42, 107, 255, 0.42);
+  box-shadow:
+    inset -2px -2px 8px rgba(255, 255, 255, 0.42),
+    inset 2px 2px 10px rgba(0, 71, 255, 0.12);
+}
+
+.pending-radar span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  background: transparent;
+  transform-origin: top left;
+  animation: pending-radar-spin 1.8s linear infinite;
+  border-top: 1px dashed rgba(0, 71, 255, 0.34);
+}
+
+.pending-radar span::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 71, 255, 0.95);
+  transform-origin: top left;
+  transform: rotate(-52deg);
+  filter: blur(12px) drop-shadow(0 0 14px rgba(0, 71, 255, 0.7));
+  opacity: 0.9;
+}
+
+@keyframes pending-radar-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .answer-result-card {
   background: linear-gradient(165deg, #ffffff, #f9fbff 70%);
   border: 1px solid rgba(205, 218, 245, 0.8);

@@ -4,6 +4,13 @@ import { getMe } from "../api/auth.api";
 import { DEMO_MODE } from "../api/mockData";
 
 const AuthContext = createContext(null);
+const VALID_ROLES = new Set(["student", "teacher"]);
+
+const normalizeStoredUser = (rawUser) => {
+  if (!rawUser || typeof rawUser !== "object") return null;
+  if (!VALID_ROLES.has(rawUser.role)) return null;
+  return rawUser;
+};
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -15,13 +22,17 @@ export function AuthProvider({ children }) {
     let savedUser = null;
 
     try {
-      savedUser = savedUserRaw ? JSON.parse(savedUserRaw) : null;
+      savedUser = normalizeStoredUser(
+        savedUserRaw ? JSON.parse(savedUserRaw) : null,
+      );
     } catch {
       localStorage.removeItem("auth_user");
     }
 
     if (savedUser) {
       setUser(savedUser);
+    } else if (savedUserRaw) {
+      localStorage.removeItem("auth_user");
     }
 
     if (token) {
@@ -30,8 +41,16 @@ export function AuthProvider({ children }) {
         if (decoded.exp * 1000 > Date.now()) {
           getMe()
             .then((res) => {
-              setUser(res.data);
-              localStorage.setItem("auth_user", JSON.stringify(res.data));
+              const normalizedUser = normalizeStoredUser(res.data);
+              if (!normalizedUser) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("auth_user");
+                setUser(null);
+                return;
+              }
+
+              setUser(normalizedUser);
+              localStorage.setItem("auth_user", JSON.stringify(normalizedUser));
             })
             .catch(() => {
               localStorage.removeItem("token");
@@ -55,12 +74,20 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = (token, userData) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("auth_user", JSON.stringify(userData));
-    if (DEMO_MODE && userData?.email) {
-      localStorage.setItem("demo_user_email", userData.email);
+    const normalizedUser = normalizeStoredUser(userData);
+    if (!normalizedUser) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth_user");
+      setUser(null);
+      return;
     }
-    setUser(userData);
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("auth_user", JSON.stringify(normalizedUser));
+    if (DEMO_MODE && normalizedUser.email) {
+      localStorage.setItem("demo_user_email", normalizedUser.email);
+    }
+    setUser(normalizedUser);
   };
 
   const logout = () => {

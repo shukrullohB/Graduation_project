@@ -3,6 +3,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -21,8 +22,8 @@ const tooltipStyle = {
 
 export default function ScoreDistribution({ data }) {
   return (
-    <ResponsiveContainer width="100%" height={320}>
-      <BarChart data={data} margin={{ top: 12, right: 12, left: -18, bottom: 0 }}>
+    <ResponsiveContainer width="100%" height={340}>
+      <BarChart data={data} barCategoryGap={28} margin={{ top: 20, right: 12, left: -18, bottom: 0 }}>
         <defs>
           <linearGradient id="histogramGlow" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#0047FF" stopOpacity={1} />
@@ -35,7 +36,7 @@ export default function ScoreDistribution({ data }) {
           dataKey="range"
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "rgba(22,48,95,0.72)", fontSize: 12 }}
+          tick={{ fill: "rgba(22,48,95,0.72)", fontSize: 12, fontWeight: 600 }}
         />
         <YAxis
           axisLine={false}
@@ -48,7 +49,16 @@ export default function ScoreDistribution({ data }) {
           contentStyle={tooltipStyle}
           formatter={(value) => [`${value}`, "Submissions"]}
         />
-        <Bar dataKey="count" radius={[18, 18, 8, 8]} fill="url(#histogramGlow)" maxBarSize={84}>
+        <Bar
+          dataKey="count"
+          radius={[22, 22, 10, 10]}
+          fill="url(#histogramGlow)"
+          maxBarSize={84}
+          background={{
+            fill: "rgba(0,71,255,0.06)",
+            radius: 22,
+          }}
+        >
           {data.map((_, index) => (
             <Cell
               key={index}
@@ -56,6 +66,12 @@ export default function ScoreDistribution({ data }) {
               fillOpacity={0.95 - index * 0.08}
             />
           ))}
+          <LabelList
+            dataKey="count"
+            position="top"
+            offset={10}
+            style={{ fill: "#16305F", fontSize: 12, fontWeight: 700 }}
+          />
         </Bar>
       </BarChart>
     </ResponsiveContainer>

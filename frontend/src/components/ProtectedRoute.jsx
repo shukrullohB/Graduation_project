@@ -2,6 +2,8 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoadingSpinner from "./LoadingSpinner";
 
+const VALID_ROLES = new Set(["student", "teacher"]);
+
 export default function ProtectedRoute({ allowedRoles }) {
   const { user, loading } = useAuth();
   const savedUserRaw = localStorage.getItem("auth_user");
@@ -13,7 +15,16 @@ export default function ProtectedRoute({ allowedRoles }) {
     localStorage.removeItem("auth_user");
   }
 
-  const effectiveUser = user ?? savedUser;
+  const effectiveUser =
+    user && VALID_ROLES.has(user.role)
+      ? user
+      : savedUser && VALID_ROLES.has(savedUser.role)
+        ? savedUser
+        : null;
+
+  if (!effectiveUser && savedUserRaw) {
+    localStorage.removeItem("auth_user");
+  }
 
   if (loading && !effectiveUser) {
     return <LoadingSpinner text="Checking access..." />;

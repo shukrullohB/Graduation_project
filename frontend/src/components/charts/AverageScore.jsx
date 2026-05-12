@@ -1,7 +1,9 @@
 import {
   Bar,
   BarChart,
+  Cell,
   CartesianGrid,
+  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -18,19 +20,23 @@ const tooltipStyle = {
 
 export default function AverageScore({ data }) {
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data} margin={{ top: 12, right: 12, left: -16, bottom: 0 }}>
+    <ResponsiveContainer width="100%" height={330}>
+      <BarChart data={data} barCategoryGap={42} margin={{ top: 24, right: 12, left: -16, bottom: 0 }}>
         <defs>
           <linearGradient id="avgGradient" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#0047FF" />
             <stop offset="48%" stopColor="#2D6BFF" />
             <stop offset="100%" stopColor="#6D96FF" />
           </linearGradient>
+          <linearGradient id="avgGradientSoft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#9EBCFF" />
+            <stop offset="100%" stopColor="#DCE8FF" />
+          </linearGradient>
         </defs>
         <CartesianGrid vertical={false} strokeDasharray="4 8" stroke="rgba(0,71,255,0.10)" />
         <XAxis
           dataKey="subject"
-          tick={{ fill: "rgba(22,48,95,0.72)", fontSize: 12 }}
+          tick={{ fill: "rgba(22,48,95,0.72)", fontSize: 12, fontWeight: 600 }}
           axisLine={false}
           tickLine={false}
         />
@@ -47,11 +53,28 @@ export default function AverageScore({ data }) {
         />
         <Bar
           dataKey="avgScore"
-          fill="url(#avgGradient)"
-          radius={[18, 18, 8, 8]}
+          radius={[20, 20, 10, 10]}
           maxBarSize={72}
           name="Avg Score"
-        />
+          background={{
+            fill: "rgba(0,71,255,0.07)",
+            radius: 20,
+          }}
+        >
+          {data.map((entry, index) => (
+            <Cell
+              key={entry.subject}
+              fill={index === 0 ? "url(#avgGradient)" : "url(#avgGradientSoft)"}
+            />
+          ))}
+          <LabelList
+            dataKey="avgScore"
+            position="top"
+            offset={12}
+            formatter={(value) => `${Number(value).toFixed(1)}`}
+            style={{ fill: "#16305F", fontSize: 12, fontWeight: 700 }}
+          />
+        </Bar>
       </BarChart>
     </ResponsiveContainer>
   );

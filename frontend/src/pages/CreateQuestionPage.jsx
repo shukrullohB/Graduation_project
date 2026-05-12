@@ -290,18 +290,83 @@ export default function CreateQuestionPage() {
               <div className="flex justify-end gap-3">
                 <button
                   type="button"
-                  className="btn-ghost"
+                  className="btn-animated-secondary"
                   onClick={() => navigate("/teacher")}
+                  aria-label="Cancel and go back"
                 >
-                  Cancel
+                  <svg
+                    className="arr-1"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M7 12H17M17 12L13 8M17 12L13 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.15"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span className="text">Cancel</span>
+                  <span className="circle" aria-hidden="true" />
+                  <svg
+                    className="arr-2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M7 12H17M17 12L13 8M17 12L13 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.15"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </button>
                 <motion.button
                   whileTap={{ scale: 0.985 }}
                   type="submit"
-                  className="btn-premium min-w-[190px]"
+                  className="btn-animated-primary min-w-[220px]"
                   disabled={loading}
                 >
-                  {loading ? "Creating..." : "Create Question"}
+                  <svg
+                    className="arr-1"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M7 12H17M17 12L13 8M17 12L13 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.15"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span className="text">
+                    {loading ? "Creating..." : "Create Question"}
+                  </span>
+                  <span className="circle" aria-hidden="true" />
+                  <svg
+                    className="arr-2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M7 12H17M17 12L13 8M17 12L13 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.15"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </motion.button>
               </div>
             </form>

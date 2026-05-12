@@ -20,7 +20,20 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
 
-    if (form.password.length < 6) {
+    const sanitizedForm = {
+      ...form,
+      full_name: form.full_name.trim(),
+      email: form.email.trim().toLowerCase(),
+    };
+
+    if (sanitizedForm.full_name.length < 2) {
+      const msg = "Full name must be at least 2 characters";
+      setError(msg);
+      showToast(msg, "error");
+      return;
+    }
+
+    if (sanitizedForm.password.length < 6) {
       const msg = "Password must be at least 6 characters";
       setError(msg);
       showToast(msg, "error");
@@ -29,7 +42,7 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      await registerApi(form);
+      await registerApi(sanitizedForm);
       showToast("Account created! Please log in.", "success");
       navigate("/login");
     } catch (err) {
@@ -183,6 +196,7 @@ export default function RegisterPage() {
                 onChange={(e) =>
                   setForm({ ...form, full_name: e.target.value })
                 }
+                minLength={2}
                 required
                 style={{
                   background: "#FFFFFF",
@@ -228,6 +242,7 @@ export default function RegisterPage() {
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
+                autoComplete="email"
                 required
                 style={{
                   background: "#FFFFFF",
@@ -275,6 +290,7 @@ export default function RegisterPage() {
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 required
                 minLength="6"
+                autoComplete="new-password"
                 style={{
                   background: "#FFFFFF",
                   border: "1px solid rgba(0,71,255,0.2)",

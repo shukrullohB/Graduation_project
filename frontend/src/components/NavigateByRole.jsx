@@ -4,6 +4,11 @@ import { useAuth } from "../context/AuthContext";
 export default function NavigateByRole() {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== "teacher" && user.role !== "student") {
+    localStorage.removeItem("token");
+    localStorage.removeItem("auth_user");
+    return <Navigate to="/login" replace />;
+  }
   if (user.role === "teacher") return <Navigate to="/teacher" replace />;
   return <Navigate to="/student" replace />;
 }

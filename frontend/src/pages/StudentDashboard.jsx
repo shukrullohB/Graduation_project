@@ -130,65 +130,103 @@ export default function StudentDashboard() {
           {
             label: "TOTAL QUESTIONS",
             value: totalQuestions,
-            icon: "📊",
+            icon: "📚",
             desc: "Open tasks in this module",
+            accent: "rgba(0,71,255,0.1)",
+            glow: "radial-gradient(circle at top left, rgba(0,71,255,0.12), transparent 55%)",
           },
           {
             label: "SUBMITTED",
             value: answeredCount,
             icon: "✓",
             desc: "Already reviewed by system",
+            accent: "rgba(35,196,131,0.12)",
+            glow: "radial-gradient(circle at top left, rgba(35,196,131,0.16), transparent 55%)",
           },
           {
             label: "REMAINING",
             value: remainingCount,
             icon: "📝",
             desc: "Keep a steady pace",
+            accent: "rgba(255,184,0,0.14)",
+            glow: "radial-gradient(circle at top left, rgba(255,184,0,0.18), transparent 55%)",
           },
         ].map((stat, i) => (
           <div
             key={i}
             style={{
-              background: "#FFFFFF",
+              position: "relative",
+              overflow: "hidden",
+              background:
+                "linear-gradient(165deg, rgba(255,255,255,0.98), rgba(248,251,255,0.94))",
               border: "1px solid rgba(0,71,255,0.12)",
-              borderRadius: "12px",
-              padding: "24px",
+              borderRadius: "24px",
+              padding: "26px",
+              boxShadow: "0 18px 36px rgba(22,48,95,0.08)",
+              transition:
+                "transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-4px)";
+              e.currentTarget.style.boxShadow =
+                "0 24px 44px rgba(22,48,95,0.14)";
+              e.currentTarget.style.borderColor = "rgba(0,71,255,0.22)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow =
+                "0 18px 36px rgba(22,48,95,0.08)";
+              e.currentTarget.style.borderColor = "rgba(0,71,255,0.12)";
             }}
           >
             <div
               style={{
+                position: "absolute",
+                inset: 0,
+                background: stat.glow,
+                pointerEvents: "none",
+              }}
+            />
+            <div
+              style={{
+                position: "relative",
                 display: "flex",
                 alignItems: "flex-start",
                 justifyContent: "space-between",
+                gap: "18px",
               }}
             >
               <div style={{ flex: 1 }}>
                 <p
                   style={{
                     fontSize: "11px",
-                    letterSpacing: "0.1em",
-                    color: "#888888",
-                    margin: "0 0 12px 0",
-                    fontWeight: "600",
+                    letterSpacing: "0.22em",
+                    color: "#6F7F9D",
+                    margin: "0 0 14px 0",
+                    fontWeight: "700",
                   }}
                 >
                   {stat.label}
                 </p>
                 <p
                   style={{
-                    fontSize: "28px",
-                    fontWeight: "700",
-                    color: "#0A0A1A",
-                    margin: "0 0 8px 0",
+                    fontSize: "44px",
+                    fontWeight: "800",
+                    color: "#16305F",
+                    margin: "0 0 10px 0",
+                    lineHeight: 1,
+                    letterSpacing: "-0.04em",
                   }}
                 >
                   {stat.value}
                 </p>
                 <p
                   style={{
-                    fontSize: "13px",
-                    color: "#555555",
+                    maxWidth: "220px",
+                    fontSize: "14px",
+                    color: "#556581",
                     margin: 0,
+                    lineHeight: "1.6",
                   }}
                 >
                   {stat.desc}
@@ -196,18 +234,32 @@ export default function StudentDashboard() {
               </div>
               <div
                 style={{
-                  width: "56px",
-                  height: "56px",
-                  background: "rgba(0,71,255,0.08)",
-                  borderRadius: "10px",
+                  width: "74px",
+                  height: "74px",
+                  background:
+                    "linear-gradient(145deg, rgba(255,255,255,0.95), rgba(241,246,255,0.92))",
+                  border: "1px solid rgba(0,71,255,0.1)",
+                  borderRadius: "22px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "24px",
-                  marginLeft: "16px",
+                  fontSize: "30px",
+                  marginLeft: "12px",
+                  boxShadow:
+                    "inset 0 1px 0 rgba(255,255,255,0.95), 0 14px 30px rgba(0,71,255,0.08)",
+                  flexShrink: 0,
+                  position: "relative",
                 }}
               >
-                {stat.icon}
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: "10px",
+                    borderRadius: "16px",
+                    background: stat.accent,
+                  }}
+                />
+                <span style={{ position: "relative" }}>{stat.icon}</span>
               </div>
             </div>
           </div>

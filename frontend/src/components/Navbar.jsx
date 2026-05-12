@@ -141,10 +141,16 @@ export default function Navbar({ role }) {
             {role === "teacher" && (
               <button
                 onClick={() => navigate("/teacher/create-question")}
-                className="btn-premium min-w-[170px]"
+                className="group relative flex h-[52px] w-[52px] items-center justify-start overflow-hidden rounded-full border border-[#4A7FFF]/22 bg-[linear-gradient(144deg,#2A6BFF,#2255F5_50%,#17C8FF)] text-white shadow-[0_18px_34px_rgba(0,71,255,0.24)] transition-all duration-300 hover:w-[184px] active:translate-x-[2px] active:translate-y-[2px]"
                 type="button"
+                aria-label="Create new question"
               >
-                + New Question
+                <span className="flex h-full w-full shrink-0 items-center justify-center text-[30px] font-light transition-all duration-300 group-hover:w-[30%] group-hover:justify-start group-hover:pl-[16px]">
+                  +
+                </span>
+                <span className="absolute right-0 w-0 overflow-hidden whitespace-nowrap pr-0 text-sm font-semibold opacity-0 transition-all duration-300 group-hover:w-[70%] group-hover:pr-[18px] group-hover:opacity-100">
+                  New Question
+                </span>
               </button>
             )}
 
@@ -160,8 +166,16 @@ export default function Navbar({ role }) {
               </div>
             </div>
 
-            <button onClick={handleLogout} className="btn-ghost" type="button">
-              Logout
+            <button onClick={handleLogout} className="logout-fab" type="button" aria-label="Logout">
+              <span className="logout-fab__sign" aria-hidden="true">
+                <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M377.9 105.9L500.7 228.7C507 235 512 244.5 512 256C512 267.5 507 277 500.7 283.3L377.9 406.1C365.4 418.6 345.1 418.6 332.6 406.1C320.1 393.6 320.1 373.3 332.6 360.8L400.1 293.3H192C174.3 293.3 160 279 160 261.3C160 243.6 174.3 229.3 192 229.3H400.1L332.6 161.8C320.1 149.3 320.1 129 332.6 116.5C345.1 94.4 365.4 93.4 377.9 105.9ZM160 96H96C78.3 96 64 110.3 64 128V384C64 401.7 78.3 416 96 416H160C177.7 416 192 430.3 192 448C192 465.7 177.7 480 160 480H96C43 480 0 437 0 384V128C0 75 43 32 96 32H160C177.7 32 192 46.3 192 64C192 81.7 177.7 96 160 96Z"
+                    fill="white"
+                  />
+                </svg>
+              </span>
+              <span className="logout-fab__text">Logout</span>
             </button>
           </div>
         </header>

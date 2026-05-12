@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -26,6 +27,19 @@ class Settings(BaseSettings):
 		env_file_encoding="utf-8",
 		case_sensitive=False,
 	)
+
+	@field_validator("debug", mode="before")
+	@classmethod
+	def normalize_debug(cls, value: object) -> bool:
+		if isinstance(value, bool):
+			return value
+		if isinstance(value, str):
+			normalized = value.strip().lower()
+			if normalized in {"1", "true", "yes", "on", "debug", "development", "dev"}:
+				return True
+			if normalized in {"0", "false", "no", "off", "release", "production", "prod"}:
+				return False
+		return bool(value)
 
 
 @lru_cache
