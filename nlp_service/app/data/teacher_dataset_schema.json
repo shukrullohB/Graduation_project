@@ -1,0 +1,6 @@
+{
+  "question": "string",
+  "student_answer": "string",
+  "teacher_score": "float (0-5)",
+  "teacher_feedback": "string (optional)"
+}

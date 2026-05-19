@@ -1,0 +1,7 @@
+{
+  "question_id": "int",
+  "question_text": "string",
+  "student_answer": "string",
+  "teacher_score": "int (0-5)",
+  "teacher_feedback": "string"
+}
