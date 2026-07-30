@@ -1,168 +1,103 @@
 # 🎓 Intelligent Short Answer Grading Platform (ASAG)
 
-An intelligent web-based platform for **automated short-answer assessment, feedback generation, and learning analytics** using NLP and a teacher-guided AI workflow (human-in-the-loop).
+A web application for automatic short-answer grading using Natural Language Processing (NLP). The system helps teachers assess student answers, generate feedback, review AI predictions, and view learning analytics.
 
-This project is developed as part of the Graduation Project module.
-
----
-
-# 👥 Team
-
-- **Shukrullo Baxtiyorov (220411)** — NLP model, dataset preparation, evaluation
-- **Sanjar Raximjanov (220304)** — Backend, database, API, system integration
-- **Akmaljon Polatjonov (220484)** — Frontend, analytics dashboards, usability testing
+This project is being developed as our university graduation project.
 
 ---
 
-# 🎯 Project Goals
+## 👥 Team
 
-- Automatically score short-answer responses (rubric-based 0–5)
-- Generate clear and useful feedback for students
-- Allow teachers to review and correct AI outputs
-- Store corrections to improve the model
-- Provide learning analytics dashboards
-- Reduce grading time and improve consistency
+- **Shukrullo Baxtiyorov** — NLP, dataset preparation, model evaluation
+- **Sanjar Raximjanov** — Backend, database, API
+- **Akmaljon Polatjonov** — Frontend, dashboards, UI testing
 
 ---
 
-# 🏗️ Project Architecture
+## Features
 
-The system consists of 3 main services:
-
-1. **Backend API (FastAPI)**
-2. **NLP Service (AI scoring + feedback)**
-3. **Frontend (React)**
-4. **PostgreSQL Database**
-5. **Dockerized infrastructure**
+- Automatic grading of short answers (0–5)
+- AI-generated feedback
+- Teacher review and score correction
+- Learning analytics dashboard
+- Local storage of grading results
+- Role-based access (Teacher / Student)
 
 ---
 
-# 📁 Project Structure
+## Architecture
+
+The project consists of four main parts:
+
+- **Backend** – FastAPI
+- **Frontend** – React + Vite
+- **NLP Service** – automatic scoring and feedback
+- **PostgreSQL** database
+
+All services run with Docker.
+
+---
+
+## Project Structure
 
 ```
 Graduation_project/
-│
-├── backend/        # FastAPI backend (API, DB, auth, review workflow)
-├── nlp_service/    # NLP scoring + feedback service
-├── frontend/       # React frontend (teacher + student UI)
-├── docs/           # Documentation and research materials
-├── infra/          # Deployment configs (nginx, scripts)
+├── backend/
+├── frontend/
+├── nlp_service/
+├── docs/
+├── infra/
 ├── docker-compose.yml
-├── .env.example
 └── README.md
 ```
 
 ---
 
-# 🔧 Backend (FastAPI)
+## Backend
 
-Located in `backend/`
+The backend provides:
 
-### Responsibilities:
 - Authentication (JWT)
-- User management (Teacher / Student)
-- Question and answer management
+- User management
+- Questions and answers
 - Teacher review workflow
-- Analytics endpoints
-- Communication with NLP service
-
-### Main Components:
-
-- `models/` → SQLAlchemy models
-- `schemas/` → Pydantic validation schemas
-- `api/routes/` → API endpoints
-- `services/` → Business logic
-- `crud/` → Database operations
-- `core/` → Config, security, DB connection
+- Analytics API
+- Communication with the NLP service
 
 ---
 
-# 🧠 NLP Service
+## NLP Service
 
-Located in `nlp_service/`
+The AI service is responsible for:
 
-### Responsibilities:
-- Automatic scoring (0–5 rubric-based)
+- Automatic answer scoring
 - Feedback generation
 - Model evaluation
-- Ablation studies
+- Comparing different scoring approaches
 
-### Modules:
+Current models include:
 
-- `scoring/`
-  - TF-IDF baseline
-  - SBERT scoring
-  - Transformer-based scoring
-
-- `feedback/`
-  - Rule-based feedback
-  - Template feedback
-
-- `evaluation/`
-  - MAE
-  - Cohen’s Kappa
-  - Correlation
-  - Ablation testing
-
-- `data/`
-  - Dataset schema
-  - Sample dataset
+- TF-IDF
+- SBERT
+- Transformer-based models
 
 ---
 
-# 💻 Frontend (React + Vite)
+## Frontend
 
-Located in `frontend/`
+The frontend includes pages for both teachers and students, including:
 
-### Pages:
-
-- LoginPage
-- TeacherDashboard
-- StudentDashboard
-- QuestionPage
-- AnswerSubmitPage
-- TeacherReviewPage
-- AnalyticsDashboard
-
-### Components:
-
-- Navbar
-- ProtectedRoute
-- ScoreBadge
-- FeedbackBox
-- Charts (ScoreDistribution, AverageScore, Mistakes)
+- Login
+- Teacher Dashboard
+- Student Dashboard
+- Question Page
+- Answer Submission
+- Teacher Review
+- Analytics Dashboard
 
 ---
 
-# 🔄 System Workflow
-
-```
-Student Answer
-      ↓
-Backend
-      ↓
-NLP Service (score + feedback)
-      ↓
-Teacher Review (approve or correct)
-      ↓
-Final Grade Stored
-      ↓
-Analytics Dashboard
-```
-
----
-
-# 📊 Evaluation Metrics
-
-- Mean Absolute Error (MAE)
-- Correlation with teacher scores
-- Cohen’s Kappa / ICC
-- Grading time comparison
-- Ablation study results
-
----
-
-# 🛠️ Tech Stack
+## Tech Stack
 
 ### Backend
 - Python
@@ -170,96 +105,62 @@ Analytics Dashboard
 - SQLAlchemy
 - PostgreSQL
 
-### AI / NLP
-- Hugging Face Transformers
-- SBERT
-- TF-IDF baseline
-
 ### Frontend
 - React
 - Vite
 - Axios
 
+### AI / NLP
+- Hugging Face Transformers
+- SBERT
+- TF-IDF
+
 ### DevOps
 - Docker
 - Docker Compose
 - Nginx
-- Ubuntu VPS
 
 ---
 
-# 🚀 How to Run (Development)
+## Getting Started
 
-## 1️⃣ Clone repository
+Clone the repository:
 
 ```bash
 git clone <repo_url>
 cd Graduation_project
 ```
 
----
-
-## 2️⃣ Run with Docker
+Run the project:
 
 ```bash
 docker-compose up --build
 ```
 
----
+Available services:
 
-## 3️⃣ Services
-
-- Backend → http://localhost:8000
-- NLP Service → http://localhost:8001
-- Frontend → http://localhost:5173
+- Backend — http://localhost:8000
+- NLP Service — http://localhost:8001
+- Frontend — http://localhost:5173
 
 ---
 
-# 🔐 Git Workflow
-
-We use a protected branching strategy:
-
-- `main` → stable version
-- `dev` → development integration
-- `feature/*` → individual features
-
-Workflow:
+## Development Workflow
 
 ```
 feature → dev → main
 ```
 
-All changes must be made via Pull Request.
+All changes are merged through Pull Requests.
 
 ---
 
-# 📚 Research Alignment
+## Current Status
 
-This project integrates:
-
-- Automated Short Answer Grading (ASAG)
-- Human-in-the-loop AI
-- Feedback generation
-- Learning analytics
-- Teacher trust and usability evaluation
+🚧 The project is currently under development.
 
 ---
 
-# 🔒 Ethics & Data Management
+## License
 
-- Student data anonymized
-- Teacher consent required
-- Data stored securely
-- Used strictly for academic purposes
-
----
-
-# 📌 Current Status
-
-🟡 In development phase — architecture and core services initialized.
-
----
-
-# 📄 License
-
-Academic project — for research and educational purposes only.
+Academic project for educational and research purposes.
