@@ -6,10 +6,8 @@ from pathlib import Path
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-from app.config import BERT_MODEL_DIR, RUBRIC_MAX_SCORE
 from app.feedback.rule_based import generate_feedback
 from app.scoring.sbert_scoring import SBERTScorer
-from app.scoring.transformer_scoring import BertRegressorScorer
 
 app = FastAPI()
 logger = logging.getLogger("nlp.main")
@@ -64,15 +62,7 @@ REFERENCE_ANSWERS = _load_reference_answers()
 
 @lru_cache(maxsize=1)
 def get_scorer() -> tuple[str, object]:
-	bert_dir = Path(BERT_MODEL_DIR)
-	if bert_dir.exists():
-		try:
-			logger.info("loading bert scorer from %s", bert_dir)
-			return "bert", BertRegressorScorer(str(bert_dir))
-		except Exception as exc:
-			logger.warning("failed to load bert scorer, fallback to sbert: %s", exc)
-
-	logger.info("loading sbert scorer")
+	logger.info("loading sbert onnx scorer")
 	return "sbert", SBERTScorer()
 
 
@@ -96,12 +86,7 @@ def prefixed_health():
 
 @app.post("/score", response_model=ScoringResponse)
 def score_answer(request: ScoringRequest):
-	model_type, scorer = get_scorer()
-
-	if model_type == "bert":
-		score = scorer.score(request.answer_text)
-		feedback = generate_feedback(score, max_score=RUBRIC_MAX_SCORE)
-		return {"score": float(score), "feedback": feedback}
+	_, scorer = get_scorer()
 
 	reference = request.reference_answer or REFERENCE_ANSWERS.get(request.question_id)
 	if not reference:
