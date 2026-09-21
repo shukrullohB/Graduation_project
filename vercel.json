@@ -8,6 +8,10 @@
     "backend": {
       "root": "backend/",
       "entrypoint": "app.main:app"
+    },
+    "nlp_service": {
+      "root": "nlp_service/",
+      "entrypoint": "app.main:app"
     }
   },
   "rewrites": [
@@ -33,6 +37,12 @@
       "source": "/openapi.json",
       "destination": {
         "service": "backend"
+      }
+    },
+    {
+      "source": "/nlp/:path*",
+      "destination": {
+        "service": "nlp_service"
       }
     },
     {

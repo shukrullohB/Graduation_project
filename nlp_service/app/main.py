@@ -90,6 +90,10 @@ def health():
 	model_type, _ = get_scorer()
 	return {"status": "ok", "model_type": model_type}
 
+@app.get("/nlp/health")
+def prefixed_health():
+	return health()
+
 @app.post("/score", response_model=ScoringResponse)
 def score_answer(request: ScoringRequest):
 	model_type, scorer = get_scorer()
@@ -109,3 +113,7 @@ def score_answer(request: ScoringRequest):
 	score = scorer.score(request.answer_text, reference)
 	feedback = generate_feedback(score, max_score=1.0)
 	return {"score": float(score), "feedback": feedback}
+
+@app.post("/nlp/score", response_model=ScoringResponse)
+def prefixed_score_answer(request: ScoringRequest):
+	return score_answer(request)
